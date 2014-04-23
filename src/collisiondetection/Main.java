@@ -6,6 +6,8 @@
 
 package collisiondetection;
 
+import java.awt.geom.Point2D;
+
 /**
  *
  * @author Nino
@@ -16,7 +18,12 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // create vehicle threads
+        Thread vehicleA = new Thread(new Vehicle("A", new Point2D.Double(16.63, 300.0)));
+        Thread vehicleB = new Thread(new Vehicle("B", new Point2D.Double(200.0, 161.2)));
+        
+        vehicleA.start();
+        vehicleB.start();
     }
     
 }
