@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * @author Nino
  */
 public class Vehicle implements Runnable {
-    private static final int TIME_SPAN = 1000; // 1 second 
+    private static final int TIME_SPAN = 2000; // 1 second 
 
     private final VehicleData data;
     private final CDReading readingsList; // will be instantiated with the same object for all threads
@@ -30,7 +30,7 @@ public class Vehicle implements Runnable {
        System.out.println("Vehicle " + data.getName() + 
                         " coordinates: (" + this.data.getCoordinatesValues().getX() + 
                         ", " + this.data.getCoordinatesValues().getY() + ")\nDate: " + this.data.getCoordinatesRegisteredDate());
-       readingsList.getVehicleReadings().add(data);
+       readingsList.addReading(data);
     }
     
     @Override
@@ -43,7 +43,7 @@ public class Vehicle implements Runnable {
                 Thread.sleep(TIME_SPAN);
                 updateCoordinates();
                 // notify collision detection system of coordinate changes
-                System.out.println("Readings count: " + readingsList.getVehicleReadings().size());
+                //System.out.println("Readings count: " + readingsList.getVehicleReadings().size());
             } catch (InterruptedException ex) {
                 Logger.getLogger(Vehicle.class.getName()).log(Level.SEVERE, null, ex);
             }

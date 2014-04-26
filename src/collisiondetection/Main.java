@@ -26,7 +26,7 @@ public class Main {
         Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", 
                             new VehicleData.Coordinates(new Point2D.Double(16.62, 300), new Date())), reading));
         Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", 
-                        new VehicleData.Coordinates(new Point2D.Double(16.62, 300), new Date())), reading));
+                        new VehicleData.Coordinates(new Point2D.Double(200, 147.32), new Date())), reading));
         
         vehicleA.start();
         vehicleB.start();
