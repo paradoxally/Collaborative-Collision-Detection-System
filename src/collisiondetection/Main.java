@@ -18,9 +18,12 @@ public class Main {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        // initialize the collision detection global reading storage
+        CDReading reading = new CDReading();
+        
         // create vehicle threads
-        Thread vehicleA = new Thread(new Vehicle("A", new Point2D.Double(16.63, 300.0)));
-        Thread vehicleB = new Thread(new Vehicle("B", new Point2D.Double(200.0, 161.2)));
+        Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", new Point2D.Double(16.63, 300.0)), reading));
+        Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", new Point2D.Double(200.0, 161.2)), reading));
         
         vehicleA.start();
         vehicleB.start();

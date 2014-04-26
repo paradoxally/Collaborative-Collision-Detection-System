@@ -16,40 +16,33 @@ import java.util.logging.Logger;
 public class Vehicle implements Runnable {
     private static final int TIME_SPAN = 1000; // 1 second 
 
-    private final String name; // name of the vehicle
-    private Point2D.Double coordinates; // current coordinates of the vehicle in 2D space
+    private final VehicleData data;
+    private final CDReading readingsList; // will be instantiated with the same object for all threads
 
-    public Vehicle(String name, Point2D.Double coordinates) {
-        this.name = name;
-        this.coordinates = coordinates; // starting coordinates
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Point2D.Double getCoordinates() {
-        return coordinates;
+    public Vehicle(VehicleData data, CDReading readingsList) {
+        this.data = data;
+        this.readingsList = readingsList;
     }
     
     private void updateCoordinates() {
-       this.coordinates = new Point2D.Double(this.coordinates.getX() + 5.0, this.coordinates.getY()); // this should really be a variable, as well as having a direction
-       System.out.println("Vehicle " + name + 
-                        " coordinates: (" + this.coordinates.getX() + 
-                        ", " + this.coordinates.getY() + ")"); 
+       this.data.setCoordinates(new Point2D.Double(this.data.getCoordinates().getX() + 5.0, this.data.getCoordinates().getY())); // this should really be a variable, as well as having a direction
+       System.out.println("Vehicle " + data.getName() + 
+                        " coordinates: (" + this.data.getCoordinates().getX() + 
+                        ", " + this.data.getCoordinates().getY() + ")");
+       readingsList.getVehicleReadings().add(data);
     }
     
     @Override
     public void run() {
         // Spawn a new thread to control the vehicle's collision detection system
-        System.out.println("Vehicle " + name + " initiated.\nStarting collision detection system...");
+        System.out.println("Vehicle " + data.getName() + " initiated.\nStarting collision detection system...");
         
         while(!Thread.currentThread().isInterrupted()) {
             try {
                 Thread.sleep(TIME_SPAN);
                 updateCoordinates();
                 // notify collision detection system of coordinate changes
-                
+                System.out.println("Readings count: " + readingsList.getVehicleReadings().size());
             } catch (InterruptedException ex) {
                 Logger.getLogger(Vehicle.class.getName()).log(Level.SEVERE, null, ex);
             }
