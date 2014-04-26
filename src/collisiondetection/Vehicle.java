@@ -7,6 +7,7 @@
 package collisiondetection;
 
 import java.awt.geom.Point2D;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 /**
@@ -25,10 +26,10 @@ public class Vehicle implements Runnable {
     }
     
     private void updateCoordinates() {
-       this.data.setCoordinates(new Point2D.Double(this.data.getCoordinates().getX() + 5.0, this.data.getCoordinates().getY())); // this should really be a variable, as well as having a direction
+       this.data.setCoordinates(new VehicleData.Coordinates(new Point2D.Double(this.data.getCoordinatesValues().getX() + 5.0, this.data.getCoordinatesValues().getY()), new Date())); // this should really be a variable, as well as having a direction
        System.out.println("Vehicle " + data.getName() + 
-                        " coordinates: (" + this.data.getCoordinates().getX() + 
-                        ", " + this.data.getCoordinates().getY() + ")");
+                        " coordinates: (" + this.data.getCoordinatesValues().getX() + 
+                        ", " + this.data.getCoordinatesValues().getY() + ")\nDate: " + this.data.getCoordinatesRegisteredDate());
        readingsList.getVehicleReadings().add(data);
     }
     

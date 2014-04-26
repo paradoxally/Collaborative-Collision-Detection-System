@@ -7,6 +7,7 @@
 package collisiondetection;
 
 import java.awt.geom.Point2D;
+import java.util.Date;
 
 /**
  *
@@ -22,8 +23,10 @@ public class Main {
         CDReading reading = new CDReading();
         
         // create vehicle threads
-        Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", new Point2D.Double(16.63, 300.0)), reading));
-        Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", new Point2D.Double(200.0, 161.2)), reading));
+        Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", 
+                            new VehicleData.Coordinates(new Point2D.Double(16.62, 300), new Date())), reading));
+        Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", 
+                        new VehicleData.Coordinates(new Point2D.Double(16.62, 300), new Date())), reading));
         
         vehicleA.start();
         vehicleB.start();

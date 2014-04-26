@@ -22,5 +22,10 @@ public class CDReading {
     public CopyOnWriteArrayList<VehicleData> getVehicleReadings() {
         return vehicleReadings;
     }   
+    
+    public boolean addReading(VehicleData vehicleData) {
         
+        
+        return true;
+    }
 }

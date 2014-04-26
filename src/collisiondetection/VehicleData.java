@@ -7,16 +7,27 @@
 package collisiondetection;
 
 import java.awt.geom.Point2D;
+import java.util.Date;
 
 /**
  *
  * @author HBK
  */
 public class VehicleData {
-    private final String name;          // name of the vehicle
-    private Point2D.Double coordinates; // current coordinates of the vehicle in 2D space
+    public static class Coordinates {
+        private final Point2D.Double coordinates; // current coordinates of the vehicle in 2D space
+        private final Date registeredTime;        // current time
 
-    public VehicleData(String name, Point2D.Double coordinates) {
+        public Coordinates(Point2D.Double coordinates, Date registeredTime) {
+            this.coordinates = coordinates;
+            this.registeredTime = registeredTime;
+        }
+    }
+    
+    private final String name;              // name of the vehicle
+    private Coordinates coordinates; 
+
+    public VehicleData(String name, Coordinates coordinates) {
         this.name = name;
         this.coordinates = coordinates;
     }
@@ -25,11 +36,16 @@ public class VehicleData {
         return name;
     }
 
-    public void setCoordinates(Point2D.Double coordinates) {
+    public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
 
-    public Point2D.Double getCoordinates() {
-        return coordinates;
+    
+    public Date getCoordinatesRegisteredDate() {
+        return coordinates.registeredTime;
+    }
+    
+    public Point2D.Double getCoordinatesValues() {
+        return coordinates.coordinates;
     }
 }
