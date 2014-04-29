@@ -13,6 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * @author Nino
  */
 public class CDReading {
+    private static final int NUMBER_CARS = 2; // 2 cars by default
 
     private final CopyOnWriteArrayList<VehicleData> vehicleReadings;
 
@@ -25,9 +26,12 @@ public class CDReading {
     }
 
     public void addReading(VehicleData vehicleData) {
-        if (this.vehicleReadings.size() < 2) { // 0 or 1 reading is okay, we can add without an issue
+        System.out.println("Number of readings: " + this.vehicleReadings.size());
+        
+        if (this.vehicleReadings.size() < NUMBER_CARS * 2) { // less than the # of cars is okay, we can add without an issue
             this.vehicleReadings.add(vehicleData);
-        } else if (this.vehicleReadings.size() <= 4) {
+        } else if (this.vehicleReadings.size() == NUMBER_CARS * 2) {
+            System.err.println("Okay, I have to replace the latest reading of vehicle " + vehicleData.getName() + "...");
             CopyOnWriteArrayList<Integer> matchedReadingIndexes = new CopyOnWriteArrayList<>();
             Integer i = 0;
             for (Iterator<VehicleData> it = vehicleReadings.iterator(); it.hasNext(); i++) {
