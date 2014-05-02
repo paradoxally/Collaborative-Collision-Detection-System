@@ -11,7 +11,7 @@ import java.util.Date;
 
 /**
  *
- * @author HBK
+ * @author Nino
  */
 public class VehicleData {
     public static class Coordinates {

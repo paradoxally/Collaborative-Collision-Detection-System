@@ -29,16 +29,18 @@ public class Vehicle implements Runnable {
     }
 
     private void updateCoordinates() {
-        this.data.setCoordinates(new VehicleData.Coordinates(new Point2D.Double(this.data.getCoordinatesValues().getX() + 5.0, this.data.getCoordinatesValues().getY()), new Date())); // this should really be a variable, as well as having a direction
-        System.out.println("\nVehicle " + data.getName()
-                + " coordinates: (" + this.data.getCoordinatesValues().getX()
-                + ", " + this.data.getCoordinatesValues().getY() + ")\nDate: " + this.data.getCoordinatesRegisteredDate());
-
         synchronized (collisionDetection) {
+            this.data.setCoordinates(new VehicleData.Coordinates(new Point2D.Double(this.data.getCoordinatesValues().getX() + 5.0, this.data.getCoordinatesValues().getY()), new Date())); // this should really be a variable, as well as having a direction
+            System.out.println("\nVehicle " + data.getName()
+                    + " coordinates: (" + this.data.getCoordinatesValues().getX()
+                    + ", " + this.data.getCoordinatesValues().getY() + ")\nDate: " + this.data.getCoordinatesRegisteredDate());
+
             readingsList.addReading(data);
 
-            // notify collision detection system of coordinate changes
-            collisionDetection.notify();
+            // notify collision detection system of coordinate changes if list is full
+            if (readingsList.getVehicleReadings().size() == CDReading.NUMBER_CARS * 2 && readingsList.getVehicleReadings().size() % 2 == 0) {
+                //collisionDetection.notify();
+            }
         }
     }
 
@@ -53,8 +55,10 @@ public class Vehicle implements Runnable {
                 Thread.sleep(TIME_SPAN);
                 updateCoordinates();
                 //System.out.println("Readings count: " + readingsList.getVehicleReadings().size());
+
             } catch (InterruptedException ex) {
-                Logger.getLogger(Vehicle.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Vehicle.class
+                        .getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
