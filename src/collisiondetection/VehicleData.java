@@ -13,7 +13,7 @@ import java.util.Date;
  *
  * @author Nino
  */
-public class VehicleData {
+public class VehicleData implements Cloneable {
     public static class Coordinates {
         private final Point2D.Double coordinates; // current coordinates of the vehicle in 2D space
         private final Date registeredTime;        // current time
@@ -30,6 +30,11 @@ public class VehicleData {
     public VehicleData(String name, Coordinates coordinates) {
         this.name = name;
         this.coordinates = coordinates;
+    }
+    
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
     
     public String getName() {

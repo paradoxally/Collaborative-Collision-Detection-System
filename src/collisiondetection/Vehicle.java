@@ -34,8 +34,12 @@ public class Vehicle implements Runnable {
             System.out.println("\nVehicle " + data.getName()
                     + " coordinates: (" + this.data.getCoordinatesValues().getX()
                     + ", " + this.data.getCoordinatesValues().getY() + ")\nDate: " + this.data.getCoordinatesRegisteredDate());
-
-            readingsList.addReading(data);
+            
+            try {
+                readingsList.addReading((VehicleData) data.clone());
+            } catch (CloneNotSupportedException ex) {
+                Logger.getLogger(Vehicle.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
             // notify collision detection system of coordinate changes if list is full
             if (readingsList.getVehicleReadings().size() == CDReading.NUMBER_CARS * 2 && readingsList.getVehicleReadings().size() % 2 == 0) {

@@ -58,21 +58,26 @@ public class CDReading {
                 }
 
                 case 2: {
-                    System.out.println("Vehicle Readings: " + vehicleReadings.get(0).getCoordinatesValues());
-                    System.out.println("Vehicle Readings: " + vehicleReadings.get(1).getCoordinatesValues());
-                    System.out.println("Vehicle Readings: " + vehicleReadings.get(2).getCoordinatesValues());
-                    System.out.println("Vehicle Readings: " + vehicleReadings.get(3).getCoordinatesValues());
-
-                    System.out.println("FRD" + vehicleReadings.get(matchedReadingIndexes.get(0)).getCoordinatesRegisteredDate());
-                    System.out.println("SRD" + vehicleReadings.get(matchedReadingIndexes.get(1)).getCoordinatesRegisteredDate());
+                    System.out.println("FRD " + vehicleReadings.get(matchedReadingIndexes.get(0)).getCoordinatesRegisteredDate());
+                    System.out.println("SRD " + vehicleReadings.get(matchedReadingIndexes.get(1)).getCoordinatesRegisteredDate());
                     if (vehicleReadings.get(matchedReadingIndexes.get(1)).getCoordinatesRegisteredDate().after(vehicleReadings.get(matchedReadingIndexes.get(0)).getCoordinatesRegisteredDate())) { // typically, the second element is newer, so we replace it
+                        // save the old reading to the first reading
+                        vehicleReadings.set(matchedReadingIndexes.get(0), vehicleReadings.get(matchedReadingIndexes.get(1)));
+                        // and now we can replace it knowing we've saved the older reading
                         vehicleReadings.set(matchedReadingIndexes.get(1), vehicleData);
+                        
                     } else {
+                        // same, but reversed
+                        vehicleReadings.set(matchedReadingIndexes.get(1), vehicleReadings.get(matchedReadingIndexes.get(0)));
                         vehicleReadings.set(matchedReadingIndexes.get(0), vehicleData);
                     }
                     break;
                 }
             }
         }
+        
+        for (int i = 0; i < vehicleReadings.size(); i++) {
+               System.out.println("Vehicle Readings: " + vehicleReadings.get(i).getCoordinatesValues() + " " + vehicleReadings.get(i).getName());
+            }
     }
 }
