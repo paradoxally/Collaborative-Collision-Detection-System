@@ -15,7 +15,9 @@ import java.util.logging.Logger;
  * @author Nino
  */
 public class CollisionDetection implements Runnable {
-
+    private static final double SAFE_DISTANCE = 7.5;
+    private static final double SPEED_REDUCTION = 0.05;
+    
     private final CDReading readingsList;
     private final VehicleData data;
     private final ArrayList<String> vehicleNames;
@@ -110,15 +112,14 @@ public class CollisionDetection implements Runnable {
                     Point2D.Double distances[][] = calculateDistanceTraveled();
                     if (distances.length == CDReading.NUMBER_CARS) {
                         double closestPointSeconds = calculateClosestPoint(distances);
-                        //this.data.setSpeed(0);
                         Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
 
                         // assuming only TWO cars in this check
                         double distance = positions[0].distance(positions[1]);
                         System.out.println("Distance: " + distance + "\nSpeed: " + data.getSpeed());
-                        if (distance <= 7.5) {    // too close for confort, let's reduce the speed of the vehicle (assuming distance is in meters)
+                        if (distance <= SAFE_DISTANCE) {    // too close for confort, let's reduce the speed of the vehicle (assuming distance is in meters)
                             System.err.format("Vehicles will be too close to each other in %.1f seconds. Reducing speed by 5%%...", closestPointSeconds);
-                            data.setSpeed(data.getSpeed() - data.getSpeed() * 0.05);
+                            data.setSpeed(data.getSpeed() - data.getSpeed() * SPEED_REDUCTION);
                         }
                     }
                 }

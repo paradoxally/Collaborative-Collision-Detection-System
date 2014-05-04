@@ -30,8 +30,6 @@ public class Vehicle implements Runnable {
     public Vehicle(VehicleData data, CDReading readingsList, Direction direction) {
         this.data = data;
         this.readingsList = readingsList;
-        //this.speed = ThreadLocalRandom.current().nextDouble(5.0, 101.0);
-        //System.out.println("Speed for vehicle " + this.data.getName() + " has been randomized! It is " + this.speed);
         collisionDetection = new Thread(new CollisionDetection(readingsList, data));
         this.direction = direction;
     }
