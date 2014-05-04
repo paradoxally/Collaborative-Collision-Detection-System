@@ -15,22 +15,53 @@ import java.util.logging.Logger;
  * @author Nino
  */
 public class Vehicle implements Runnable {
-
+    public  enum Direction {
+        NORTH, SOUTH, WEST, EAST
+    }
+    
     private static final int TIME_SPAN = 2000; // 1 second
     private final Thread collisionDetection;
 
     private final VehicleData data;
     private final CDReading readingsList; // will be instantiated with the same object for all threads
-
-    public Vehicle(VehicleData data, CDReading readingsList) {
+    private final Direction direction;
+    
+    
+    public Vehicle(VehicleData data, CDReading readingsList, Direction direction) {
         this.data = data;
         this.readingsList = readingsList;
-        collisionDetection = new Thread(new CollisionDetection(readingsList));
+        //this.speed = ThreadLocalRandom.current().nextDouble(5.0, 101.0);
+        //System.out.println("Speed for vehicle " + this.data.getName() + " has been randomized! It is " + this.speed);
+        collisionDetection = new Thread(new CollisionDetection(readingsList, data));
+        this.direction = direction;
     }
 
     private void updateCoordinates() {
         synchronized (collisionDetection) {
-            this.data.setCoordinates(new VehicleData.Coordinates(new Point2D.Double(this.data.getCoordinatesValues().getX() + 5.0, this.data.getCoordinatesValues().getY()), new Date())); // this should really be a variable, as well as having a direction
+            double speed = 0.0;
+            
+            switch(direction) {
+                case EAST:
+                case SOUTH: {
+                    speed = this.data.getSpeed();
+                    break;
+                }
+                
+                case NORTH:
+                case WEST: {
+                    speed = -this.data.getSpeed();
+                }
+            }
+            
+            this.data.setCoordinates(new VehicleData.Coordinates(
+                    new Point2D.Double((direction == Direction.WEST || direction == Direction.EAST
+                                    ? this.data.getCoordinatesValues().getX() + speed 
+                                    : this.data.getCoordinatesValues().getX()), 
+                            (direction == Direction.NORTH || direction == Direction.SOUTH 
+                                    ? this.data.getCoordinatesValues().getY() + speed : 
+                                    this.data.getCoordinatesValues().getY())), 
+                    new Date()));
+            
             System.out.println("\nVehicle " + data.getName()
                     + " coordinates: (" + this.data.getCoordinatesValues().getX()
                     + ", " + this.data.getCoordinatesValues().getY() + ")\nDate: " + this.data.getCoordinatesRegisteredDate());
@@ -43,7 +74,7 @@ public class Vehicle implements Runnable {
 
             // notify collision detection system of coordinate changes if list is full
             if (readingsList.getVehicleReadings().size() == CDReading.NUMBER_CARS * 2 && readingsList.getVehicleReadings().size() % 2 == 0) {
-                //collisionDetection.notify();
+                collisionDetection.notify();
             }
         }
     }

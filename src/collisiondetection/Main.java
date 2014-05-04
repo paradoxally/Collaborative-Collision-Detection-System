@@ -24,9 +24,9 @@ public class Main {
         
         // create vehicle threads
         Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", 
-                            new VehicleData.Coordinates(new Point2D.Double(16.62, 300), new Date())), reading));
+                            new VehicleData.Coordinates(new Point2D.Double(0, 300), new Date()), 16.67), reading, Vehicle.Direction.EAST));
         Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", 
-                        new VehicleData.Coordinates(new Point2D.Double(200, 147.32), new Date())), reading));
+                        new VehicleData.Coordinates(new Point2D.Double(200, 133.44), new Date()), 13.88), reading, Vehicle.Direction.SOUTH));
         
         vehicleA.start();
         vehicleB.start();

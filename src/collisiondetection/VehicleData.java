@@ -26,10 +26,12 @@ public class VehicleData implements Cloneable {
     
     private final String name;              // name of the vehicle
     private Coordinates coordinates; 
+    private double speed;
 
-    public VehicleData(String name, Coordinates coordinates) {
+    public VehicleData(String name, Coordinates coordinates, double speed) {
         this.name = name;
         this.coordinates = coordinates;
+        this.speed = speed;
     }
     
     @Override
@@ -41,6 +43,14 @@ public class VehicleData implements Cloneable {
         return name;
     }
 
+    public double getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+   
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
