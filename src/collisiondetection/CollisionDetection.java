@@ -72,25 +72,25 @@ public class CollisionDetection implements Runnable {
         System.out.println("u: " + u);
         double v = -(distances[0][1].getY() + distances[1][1].getY());
         System.out.println("v: " + v);
-        System.out.println("Numerator: " + ((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v)));
+        System.out.println("Numerator: " + Math.abs((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v)));
         System.out.println("Denominator: " + (Math.pow(u, 2) + Math.pow(v, 2)));
         double closestPoint = Math.abs(((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v))) / (Math.pow(u, 2) + Math.pow(v, 2));
         System.out.println("Closest point is: " + closestPoint);
 
         return closestPoint;
     }
-    
+
     private synchronized Point2D.Double[] calculateVehiclesPositionAtPoint(double closestPointSeconds, Point2D.Double[][] distances) {
         Point2D.Double[] positions = new Point2D.Double[CDReading.NUMBER_CARS];
-        
+
         int i = 0;
         for (Point2D.Double[] distance : distances) {   // for each car
             positions[i] = new Point2D.Double(distance[0].getX() + closestPointSeconds * distance[1].getX(),
-                                              distance[0].getY() + closestPointSeconds * distance[1].getY());
+                    distance[0].getY() + closestPointSeconds * distance[1].getY());
             System.out.println("Position in " + closestPointSeconds + ": " + positions[i]);
             ++i;
         }
-        
+
         return positions;
     }
 
@@ -112,7 +112,7 @@ public class CollisionDetection implements Runnable {
                         double closestPointSeconds = calculateClosestPoint(distances);
                         //this.data.setSpeed(0);
                         Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
-                        
+
                         // assuming only TWO cars in this check
                         double distance = positions[0].distance(positions[1]);
                         System.out.println("Distance: " + distance + "\nSpeed: " + data.getSpeed());

@@ -58,8 +58,6 @@ public class CDReading {
                 }
 
                 case 2: {
-                    System.out.println("FRD " + vehicleReadings.get(matchedReadingIndexes.get(0)).getCoordinatesRegisteredDate());
-                    System.out.println("SRD " + vehicleReadings.get(matchedReadingIndexes.get(1)).getCoordinatesRegisteredDate());
                     if (vehicleReadings.get(matchedReadingIndexes.get(1)).getCoordinatesRegisteredDate().after(vehicleReadings.get(matchedReadingIndexes.get(0)).getCoordinatesRegisteredDate())) { // typically, the second element is newer, so we replace it
                         // save the old reading to the first reading
                         vehicleReadings.set(matchedReadingIndexes.get(0), vehicleReadings.get(matchedReadingIndexes.get(1)));
