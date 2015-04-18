@@ -74,8 +74,8 @@ public class CDReading {
             }
         }
         
-        for (int i = 0; i < vehicleReadings.size(); i++) {
-               System.out.println("Vehicle Readings: " + vehicleReadings.get(i).getCoordinatesValues() + " " + vehicleReadings.get(i).getName());
-            }
+        for (VehicleData vehicleReading : vehicleReadings) {
+            System.out.println("Vehicle Readings: " + vehicleReading.getCoordinatesValues() + " " + vehicleReading.getName());
+        }
     }
 }
