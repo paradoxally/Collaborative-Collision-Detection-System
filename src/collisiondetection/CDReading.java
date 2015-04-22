@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class CDReading {
 
-    public static final int NUMBER_CARS = 2; // 2 cars by default
+    public static final int NUMBER_CARS = 3; // 3 cars by default
 
     private final CopyOnWriteArrayList<VehicleData> vehicleReadings;
 
