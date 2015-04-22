@@ -16,12 +16,20 @@ import java.util.logging.Logger;
  */
 public class CollisionDetection implements Runnable {
     private static final double SAFE_DISTANCE = 7.5;
+    private static final double DRY_ASPHALT=10.0; 
+    private static final double WET_ASPHALT=15.0;
+    private static final double DRY_CONCRETE=20.0; 
+    private static final double WET_CONCRETE=25.0;
+    private static final double SNOW=45.0;
+    private static final double ICE=70.0;
+    private static final String rCondition="";
+    
     private static final double SPEED_REDUCTION = 0.05;
     
     private final CDReading readingsList;
     private final VehicleData data;
-    private final ArrayList<String> vehicleNames;
-
+    private final ArrayList<String> vehicleNames; 
+    
     public CollisionDetection(CDReading readingsList, VehicleData data) {
         this.readingsList = readingsList;
         this.data = data;
@@ -39,7 +47,7 @@ public class CollisionDetection implements Runnable {
     }
 
     private synchronized Point2D.Double[][] calculateDistanceTraveled() {   // calculates distance traveled and returns coordinates according to parametric equations of type P(t) = P(0) + t(u), where P(0) is the first reading and u is the calculated distance between P1 - P0.
-        Point2D.Double distances[][] = new Point2D.Double[CDReading.NUMBER_CARS][2];
+        Point2D.Double distances[][] = new Point2D.Double[CDReading.NUMBER_CARS][3];
 
         // for each vehicle, calculate distance traveled
         int i = 0;
@@ -77,7 +85,7 @@ public class CollisionDetection implements Runnable {
         System.out.println("Numerator: " + Math.abs((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v)));
         System.out.println("Denominator: " + (Math.pow(u, 2) + Math.pow(v, 2)));
         double closestPoint = Math.abs(((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v))) / (Math.pow(u, 2) + Math.pow(v, 2));
-        System.out.println("Closest point is: " + closestPoint);
+        System.out.println("Closest point is: " + closestPoint); 
 
         return closestPoint;
     }
@@ -95,7 +103,45 @@ public class CollisionDetection implements Runnable {
 
         return positions;
     }
-
+    
+    public synchronized void roadCondition(String rCondition) {
+        
+        for (String vehicleName : vehicleNames) {
+            ArrayList<Integer> vehicleReadings = readingsList.getReadingsForVehicle(vehicleName); 
+            if (rCondition.equals("Dry_Asphalt")) {
+                data.setSafe_distance(DRY_ASPHALT); 
+                System.out.println("Dry_Asphalt");
+            }else{ 
+                if (rCondition.equals("Wet_Asphalt")) {
+                data.setSafe_distance(WET_ASPHALT);
+                    System.out.println("Wet Asphalt");
+            }else{ 
+                if (rCondition.equals("Dry_Concrete")) {
+                data.setSafe_distance(DRY_CONCRETE); 
+                    System.out.println("Dry Concrete");
+            }else{     
+                if (rCondition.equals("Wet_Concrete")) {
+                data.setSafe_distance(WET_CONCRETE); 
+                    System.out.println("Wet Concrete");
+            }else{ 
+                if (rCondition.equals("Snow")) {
+                data.setSafe_distance(SNOW); 
+                    System.out.println("Snow");
+            }else{ 
+                if (rCondition.equals("Ice")) {
+                data.setSafe_distance(ICE); 
+                    System.out.println("Ice");
+                
+            }
+    }
+                }
+                }
+                }
+            }
+        } 
+    }
+    
+    
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
@@ -121,6 +167,7 @@ public class CollisionDetection implements Runnable {
                             System.err.format("Vehicles will be too close to each other in %.1f seconds. Reducing speed by 5%%...", closestPointSeconds);
                             data.setSpeed(data.getSpeed() - data.getSpeed() * SPEED_REDUCTION);
                         }
+                        roadCondition(rCondition);
                     }
                 }
             } catch (InterruptedException ex) {
