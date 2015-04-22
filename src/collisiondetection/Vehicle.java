@@ -45,7 +45,10 @@ public class Vehicle implements Runnable {
                     break;
                 }
                 
-                case NORTH:
+                case NORTH: {
+                    speed= this.data.getSpeed();
+                    break;
+                }
                 case WEST: {
                     speed = -this.data.getSpeed();
                 }
