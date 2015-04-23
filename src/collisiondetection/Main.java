@@ -24,7 +24,7 @@ public class Main {
         
         // create vehicle threads
         Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", 
-                            new VehicleData.Coordinates(new Point2D.Double(0, 2), new Date()), 1, "Wet_Asphalt"), reading, Vehicle.Direction.EAST));
+                            new VehicleData.Coordinates(new Point2D.Double(0, 2), new Date()), 1, "Wet_Asphalt"), reading, Vehicle.Direction.WEST));
         vehicleA.setName("Vehicle A");
        
        

@@ -15,19 +15,21 @@ import java.util.logging.Logger;
  * @author Nino
  */
 public class Vehicle implements Runnable {
-    public  enum Direction {
+
+    public enum Direction {
+
         NORTH, SOUTH, WEST, EAST
     }
-    
+
     private static final int TIME_SPAN = 5000; // 5 seconds
     private final Thread collisionDetection;
 
     private final VehicleData data;
     private final CDReading readingsList; // will be instantiated with the same object for all threads
     private final Direction direction;
-    
+
     private boolean justStartedCar;
-    
+
     public Vehicle(VehicleData data, CDReading readingsList, Direction direction) {
         this.data = data;
         this.readingsList = readingsList;
@@ -37,42 +39,81 @@ public class Vehicle implements Runnable {
         this.justStartedCar = true;
     }
 
+    // Checks if vehicle will be at the edge of the 1000 square mile area
+    private boolean willHitEdge() {
+        switch (this.direction) {
+            case NORTH:
+                if (this.data.getCoordinatesValues().getY() + calculateSpeed() > CollisionDetection.MAX_COORDINATE) {
+                    return true;
+                }
+                break;
+            case SOUTH:
+                if (this.data.getCoordinatesValues().getY() + calculateSpeed() < CollisionDetection.MIN_COORDINATE) {
+                    return true;
+                }
+                break;
+            case WEST:
+                if (this.data.getCoordinatesValues().getX() + calculateSpeed() < CollisionDetection.MIN_COORDINATE) {
+                    return true;
+                }
+                break;
+            case EAST:
+                if (this.data.getCoordinatesValues().getX() + calculateSpeed() > CollisionDetection.MAX_COORDINATE) {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
+    }
+
+    private double calculateSpeed() {
+        switch (direction) {
+            case EAST:
+            case NORTH: {
+                return this.data.getSpeed();
+            }
+
+            case SOUTH:
+            case WEST: {
+                return -this.data.getSpeed();
+            }
+            default:
+                return 0.0;
+        }
+    }
+
     private void updateCoordinates() {
         synchronized (collisionDetection) {
-            double speed = 0.0;
-            
-            switch(direction) {
-                case EAST:
-                case NORTH: {
-                    speed = this.data.getSpeed();
-                    break;
+            double speed = calculateSpeed();
+
+            if (!willHitEdge()) {
+                if (this.justStartedCar) {
+                    // if the car just started, use the coordinates given
+                    this.justStartedCar = false;
+                } else {
+
+                    this.data.setCoordinates(new VehicleData.Coordinates(
+                            new Point2D.Double((direction == Direction.WEST || direction == Direction.EAST
+                                            ? this.data.getCoordinatesValues().getX() + speed
+                                            : this.data.getCoordinatesValues().getX()),
+                                    (direction == Direction.NORTH || direction == Direction.SOUTH
+                                            ? this.data.getCoordinatesValues().getY() + speed
+                                            : this.data.getCoordinatesValues().getY())),
+                            new Date()));
+
                 }
-                
-                case SOUTH:
-                case WEST: {
-                    speed = -this.data.getSpeed();
-                    break;
-                }
-            }
-            
-            if(this.justStartedCar) {
-                // if the car just started, use the coordinates given
-                this.justStartedCar = false;
             } else {
-                this.data.setCoordinates(new VehicleData.Coordinates(
-                    new Point2D.Double((direction == Direction.WEST || direction == Direction.EAST
-                                    ? this.data.getCoordinatesValues().getX() + speed 
-                                    : this.data.getCoordinatesValues().getX()), 
-                            (direction == Direction.NORTH || direction == Direction.SOUTH 
-                                    ? this.data.getCoordinatesValues().getY() + speed : 
-                                    this.data.getCoordinatesValues().getY())), 
-                    new Date()));
+                // change direction, maybe? or stop?
+                System.err.println("Vehicle " + this.data.getName() + " will hit the edge of the area. Stopping...");
+                Thread.currentThread().interrupt();
+                return;
             }
-            
+
             System.out.println("\nVehicle " + data.getName()
                     + " coordinates: (" + this.data.getCoordinatesValues().getX()
                     + ", " + this.data.getCoordinatesValues().getY() + ")\nDate: " + this.data.getCoordinatesRegisteredDate());
-            
+
             try {
                 readingsList.addReading((VehicleData) data.clone());
             } catch (CloneNotSupportedException ex) {
@@ -99,8 +140,10 @@ public class Vehicle implements Runnable {
                 //System.out.println("Readings count: " + readingsList.getVehicleReadings().size());
 
             } catch (InterruptedException ex) {
-                Logger.getLogger(Vehicle.class
-                        .getName()).log(Level.SEVERE, null, ex);
+                // Dispose of objects safely
+                collisionDetection.interrupt();
+                System.err.println("Vehicle " + this.data.getName() + " has stopped.");
+                return;
             }
         }
     }

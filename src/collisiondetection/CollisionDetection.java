@@ -7,29 +7,31 @@ package collisiondetection;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
  * @author Nino
  */
 public class CollisionDetection implements Runnable {
+
+    public static final double MIN_COORDINATE = 0.0;
+    public static final double MAX_COORDINATE = 31.0;
+
     private static final double SAFE_DISTANCE = 7.5;
-    private static final double DRY_ASPHALT=10.0; 
-    private static final double WET_ASPHALT=15.0;
-    private static final double DRY_CONCRETE=20.0; 
-    private static final double WET_CONCRETE=25.0;
-    private static final double SNOW=45.0;
-    private static final double ICE=70.0;
-    private static final String rCondition="";
-    
+    private static final double DRY_ASPHALT = 10.0;
+    private static final double WET_ASPHALT = 15.0;
+    private static final double DRY_CONCRETE = 20.0;
+    private static final double WET_CONCRETE = 25.0;
+    private static final double SNOW = 45.0;
+    private static final double ICE = 70.0;
+    private static final String rCondition = "";
+
     private static final double SPEED_REDUCTION = 0.05;
-    
+
     private final CDReading readingsList;
     private final VehicleData data;
-    private final ArrayList<String> vehicleNames; 
-    
+    private final ArrayList<String> vehicleNames;
+
     public CollisionDetection(CDReading readingsList, VehicleData data) {
         this.readingsList = readingsList;
         this.data = data;
@@ -74,74 +76,72 @@ public class CollisionDetection implements Runnable {
     }
 
     /*private synchronized double calculateClosestPoint(Point2D.Double[][] distances) {
-        double xW0 = -(distances[0][0].getX() - distances[1][0].getX());
-        System.out.println("xWO: " + xW0);
-        double yW0 = -(distances[0][0].getY() - distances[1][0].getY());
-        System.out.println("yWO: " + yW0);
-        double u = distances[0][1].getX() + distances[1][1].getX();
-        System.out.println("u: " + u);
-        double v = -(distances[0][1].getY() + distances[1][1].getY());
-        System.out.println("v: " + v);
-        System.out.println("Numerator: " + Math.abs((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v)));
-        System.out.println("Denominator: " + (Math.pow(u, 2) + Math.pow(v, 2)));
-        double closestPoint = Math.abs(((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v))) / (Math.pow(u, 2) + Math.pow(v, 2));
-        System.out.println("Closest point is: " + closestPoint); 
+     double xW0 = -(distances[0][0].getX() - distances[1][0].getX());
+     System.out.println("xWO: " + xW0);
+     double yW0 = -(distances[0][0].getY() - distances[1][0].getY());
+     System.out.println("yWO: " + yW0);
+     double u = distances[0][1].getX() + distances[1][1].getX();
+     System.out.println("u: " + u);
+     double v = -(distances[0][1].getY() + distances[1][1].getY());
+     System.out.println("v: " + v);
+     System.out.println("Numerator: " + Math.abs((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v)));
+     System.out.println("Denominator: " + (Math.pow(u, 2) + Math.pow(v, 2)));
+     double closestPoint = Math.abs(((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v))) / (Math.pow(u, 2) + Math.pow(v, 2));
+     System.out.println("Closest point is: " + closestPoint); 
 
-        return closestPoint;
-    }
+     return closestPoint;
+     }
 
-    private synchronized Point2D.Double[] calculateVehiclesPositionAtPoint(double closestPointSeconds, Point2D.Double[][] distances) {
-        Point2D.Double[] positions = new Point2D.Double[CDReading.NUMBER_CARS];
+     private synchronized Point2D.Double[] calculateVehiclesPositionAtPoint(double closestPointSeconds, Point2D.Double[][] distances) {
+     Point2D.Double[] positions = new Point2D.Double[CDReading.NUMBER_CARS];
 
-        int i = 0;
-        for (Point2D.Double[] distance : distances) {   // for each car
-            positions[i] = new Point2D.Double(distance[0].getX() + closestPointSeconds * distance[1].getX(),
-                    distance[0].getY() + closestPointSeconds * distance[1].getY());
-            System.out.println("Position in " + closestPointSeconds + ": " + positions[i]);
-            ++i;
-        }
+     int i = 0;
+     for (Point2D.Double[] distance : distances) {   // for each car
+     positions[i] = new Point2D.Double(distance[0].getX() + closestPointSeconds * distance[1].getX(),
+     distance[0].getY() + closestPointSeconds * distance[1].getY());
+     System.out.println("Position in " + closestPointSeconds + ": " + positions[i]);
+     ++i;
+     }
 
-        return positions;
-    }*/
-    
+     return positions;
+     }*/
     public synchronized void roadCondition(String rCondition) {
-        
+
         for (String vehicleName : vehicleNames) {
-            ArrayList<Integer> vehicleReadings = readingsList.getReadingsForVehicle(vehicleName); 
+            ArrayList<Integer> vehicleReadings = readingsList.getReadingsForVehicle(vehicleName);
             if (rCondition.equals("Dry_Asphalt")) {
-                data.setSafe_distance(DRY_ASPHALT); 
+                data.setSafe_distance(DRY_ASPHALT);
                 System.out.println("Dry_Asphalt");
-            }else{ 
+            } else {
                 if (rCondition.equals("Wet_Asphalt")) {
-                data.setSafe_distance(WET_ASPHALT);
+                    data.setSafe_distance(WET_ASPHALT);
                     System.out.println("Wet Asphalt");
-            }else{ 
-                if (rCondition.equals("Dry_Concrete")) {
-                data.setSafe_distance(DRY_CONCRETE); 
-                    System.out.println("Dry Concrete");
-            }else{     
-                if (rCondition.equals("Wet_Concrete")) {
-                data.setSafe_distance(WET_CONCRETE); 
-                    System.out.println("Wet Concrete");
-            }else{ 
-                if (rCondition.equals("Snow")) {
-                data.setSafe_distance(SNOW); 
-                    System.out.println("Snow");
-            }else{ 
-                if (rCondition.equals("Ice")) {
-                data.setSafe_distance(ICE); 
-                    System.out.println("Ice");
-                
+                } else {
+                    if (rCondition.equals("Dry_Concrete")) {
+                        data.setSafe_distance(DRY_CONCRETE);
+                        System.out.println("Dry Concrete");
+                    } else {
+                        if (rCondition.equals("Wet_Concrete")) {
+                            data.setSafe_distance(WET_CONCRETE);
+                            System.out.println("Wet Concrete");
+                        } else {
+                            if (rCondition.equals("Snow")) {
+                                data.setSafe_distance(SNOW);
+                                System.out.println("Snow");
+                            } else {
+                                if (rCondition.equals("Ice")) {
+                                    data.setSafe_distance(ICE);
+                                    System.out.println("Ice");
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
+        }
     }
-                }
-                }
-                }
-            }
-        } 
-    }
-    
-    
+
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
@@ -156,22 +156,23 @@ public class CollisionDetection implements Runnable {
                     }
 
                     /*Point2D.Double distances[][] = calculateDistanceTraveled();
-                    if (distances.length == CDReading.NUMBER_CARS) {
-                        double closestPointSeconds = calculateClosestPoint(distances);
-                        Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
+                     if (distances.length == CDReading.NUMBER_CARS) {
+                     double closestPointSeconds = calculateClosestPoint(distances);
+                     Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
 
-                        // assuming only TWO cars in this check
-                        double distance = positions[0].distance(positions[1]);
-                        System.out.println("Distance: " + distance + "\nSpeed: " + data.getSpeed());
-                        if (distance <= SAFE_DISTANCE) {    // too close for confort, let's reduce the speed of the vehicle (assuming distance is in meters)
-                            System.err.format("Vehicles will be too close to each other in %.1f seconds. Reducing speed by 5%%...", closestPointSeconds);
-                            data.setSpeed(data.getSpeed() - data.getSpeed() * SPEED_REDUCTION);
-                        }
-                        roadCondition(rCondition);
-                    }*/
+                     // assuming only TWO cars in this check
+                     double distance = positions[0].distance(positions[1]);
+                     System.out.println("Distance: " + distance + "\nSpeed: " + data.getSpeed());
+                     if (distance <= SAFE_DISTANCE) {    // too close for confort, let's reduce the speed of the vehicle (assuming distance is in meters)
+                     System.err.format("Vehicles will be too close to each other in %.1f seconds. Reducing speed by 5%%...", closestPointSeconds);
+                     data.setSpeed(data.getSpeed() - data.getSpeed() * SPEED_REDUCTION);
+                     }
+                     roadCondition(rCondition);
+                     }*/
                 }
             } catch (InterruptedException ex) {
-                Logger.getLogger(CollisionDetection.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println("Vehicle " + this.data.getName() + "'s collision detection system has terminated.");
+                return;
             }
         }
     }
