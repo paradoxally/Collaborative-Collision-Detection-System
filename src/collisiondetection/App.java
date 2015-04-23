@@ -59,7 +59,7 @@ public class App extends JFrame implements ActionListener {
     
     Thread vehicleA= new Thread();
     
-    VehicleData v= new VehicleData(TOOL_TIP_TEXT_KEY, null, WIDTH, TOOL_TIP_TEXT_KEY);
+    VehicleData v= new VehicleData(TOOL_TIP_TEXT_KEY, null, WIDTH, null);
 	
     Point2D.Double c1= v.getCoordinatesValues();
     private int xCoor = (int)c1.getX();

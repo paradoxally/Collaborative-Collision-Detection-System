@@ -13,19 +13,10 @@ import java.util.ArrayList;
  * @author Nino
  */
 public class CollisionDetection implements Runnable {
-
     public static final double MIN_COORDINATE = 0.0;
-    public static final double MAX_COORDINATE = 31.0;
-
-    private static final double SAFE_DISTANCE = 7.5;
-    private static final double DRY_ASPHALT = 10.0;
-    private static final double WET_ASPHALT = 15.0;
-    private static final double DRY_CONCRETE = 20.0;
-    private static final double WET_CONCRETE = 25.0;
-    private static final double SNOW = 45.0;
-    private static final double ICE = 70.0;
-    private static final String rCondition = "";
-
+    public static final double MAX_COORDINATE = 310.0;
+    
+    //private static final double SAFE_DISTANCE = 7.5;
     private static final double SPEED_REDUCTION = 0.05;
 
     private final CDReading readingsList;
@@ -105,43 +96,8 @@ public class CollisionDetection implements Runnable {
 
      return positions;
      }*/
-    public synchronized void roadCondition(String rCondition) {
-
-        for (String vehicleName : vehicleNames) {
-            ArrayList<Integer> vehicleReadings = readingsList.getReadingsForVehicle(vehicleName);
-            if (rCondition.equals("Dry_Asphalt")) {
-                data.setSafe_distance(DRY_ASPHALT);
-                System.out.println("Dry_Asphalt");
-            } else {
-                if (rCondition.equals("Wet_Asphalt")) {
-                    data.setSafe_distance(WET_ASPHALT);
-                    System.out.println("Wet Asphalt");
-                } else {
-                    if (rCondition.equals("Dry_Concrete")) {
-                        data.setSafe_distance(DRY_CONCRETE);
-                        System.out.println("Dry Concrete");
-                    } else {
-                        if (rCondition.equals("Wet_Concrete")) {
-                            data.setSafe_distance(WET_CONCRETE);
-                            System.out.println("Wet Concrete");
-                        } else {
-                            if (rCondition.equals("Snow")) {
-                                data.setSafe_distance(SNOW);
-                                System.out.println("Snow");
-                            } else {
-                                if (rCondition.equals("Ice")) {
-                                    data.setSafe_distance(ICE);
-                                    System.out.println("Ice");
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
+    
+    
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {

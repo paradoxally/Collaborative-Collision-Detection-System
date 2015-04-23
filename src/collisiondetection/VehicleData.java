@@ -24,18 +24,35 @@ public class VehicleData implements Cloneable {
         }
     }
     
+    public enum RoadCondition {
+        DRY_ASPHALT(10.0),
+        WET_ASPHALT(15.0),
+        DRY_CONCRETE(20.0),
+        WET_CONCRETE(25.0),
+        SNOW(45.0),
+        ICE(70.0);
+        
+        private final double safetyDistance;
+        
+        RoadCondition(double safetyDistance) {
+            this.safetyDistance = safetyDistance;
+        }
+
+        public double getSafetyDistance() {
+            return safetyDistance;
+        }
+    }
+    
     private final String name;              // name of the vehicle
     private Coordinates coordinates; 
     private double speed; 
-    private double safe_distance;
-    private String road_condition; // condition of the road (Wet, Dry, Snow, Ice)
+    private RoadCondition roadCondition; // condition of the road (Wet, Dry, Snow, Ice)
 
-    public VehicleData(String name, Coordinates coordinates, double speed, String road_condition) {
+    public VehicleData(String name, Coordinates coordinates, double speed, RoadCondition roadCondition) {
         this.name = name;
         this.coordinates = coordinates;
         this.speed = speed;
-        //this.safe_distance = safe_distance; 
-        this.road_condition = road_condition;
+        this.roadCondition = roadCondition;
     }
     
     @Override
@@ -55,36 +72,32 @@ public class VehicleData implements Cloneable {
         this.speed = speed;
     }
 
-   
-    //Safe Distance to road condition
-    public double getSafe_distance() {
-        return safe_distance;
-    } 
-
-    public void setSafe_distance(double safe_distance) {
-        this.safe_distance = safe_distance;
+    public RoadCondition getRoadCondition() {
+        return roadCondition;
     }
 
-    public String getRoad_condition() {
-        return road_condition;
+    public void setRoadCondition(RoadCondition roadCondition) {
+        this.roadCondition = roadCondition;
     }
-
-    public void setRoad_condition(String road_condition) {
-        this.road_condition = road_condition;
-    }
-   
     
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
 
-    
     public Date getCoordinatesRegisteredDate() {
         return coordinates.registeredTime;
     }
     
     public Point2D.Double getCoordinatesValues() {
         return coordinates.coordinates;
-    } 
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Road condition: %s (safety distance: %.1f)", 
+                this.getRoadCondition(), 
+                this.getRoadCondition().getSafetyDistance());
+    }
+    
     
 }

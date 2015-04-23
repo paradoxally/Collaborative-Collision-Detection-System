@@ -15,9 +15,7 @@ import java.util.logging.Logger;
  * @author Nino
  */
 public class Vehicle implements Runnable {
-
     public enum Direction {
-
         NORTH, SOUTH, WEST, EAST
     }
 
@@ -27,7 +25,6 @@ public class Vehicle implements Runnable {
     private final VehicleData data;
     private final CDReading readingsList; // will be instantiated with the same object for all threads
     private final Direction direction;
-
     private boolean justStartedCar;
 
     public Vehicle(VehicleData data, CDReading readingsList, Direction direction) {
@@ -148,4 +145,8 @@ public class Vehicle implements Runnable {
         }
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

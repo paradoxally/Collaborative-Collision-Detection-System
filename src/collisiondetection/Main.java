@@ -24,14 +24,16 @@ public class Main {
         
         // create vehicle threads
         Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", 
-                            new VehicleData.Coordinates(new Point2D.Double(0, 2), new Date()), 1, "Wet_Asphalt"), reading, Vehicle.Direction.WEST));
+                            new VehicleData.Coordinates(new Point2D.Double(0.0, 150.0), new Date()), 
+                15.0, VehicleData.RoadCondition.DRY_ASPHALT), reading, Vehicle.Direction.EAST));
         vehicleA.setName("Vehicle A");
        
        
         Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", 
-                          new VehicleData.Coordinates(new Point2D.Double(31, 2), new Date()), 1.2, "Wet_Asphalt"), reading, Vehicle.Direction.WEST));
+                          new VehicleData.Coordinates(new Point2D.Double(310.0, 150.0), new Date()),
+                20.0, VehicleData.RoadCondition.DRY_ASPHALT), reading, Vehicle.Direction.WEST));
         vehicleA.setName("Vehicle B");
-
+        
         
         //Thread vehicleC= new Thread(new Vehicle(new VehicleData("C", 
                           //new VehicleData.Coordinates(new Point2D.Double(150, 100), new Date()), 15.00,"Ice"),reading,Vehicle.Direction.NORTH));
@@ -41,7 +43,7 @@ public class Main {
       //          new VehicleData.Coordinates(new Point2D.Double(150, 100), new Date()), 15.00),reading,Vehicle.Direction.NORTH));
         
         vehicleA.start();
-        vehicleB.start(); 
+        vehicleB.start();
         //vehicleC.start();
     }
     
