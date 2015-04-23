@@ -19,19 +19,22 @@ public class Vehicle implements Runnable {
         NORTH, SOUTH, WEST, EAST
     }
     
-    private static final int TIME_SPAN = 2000; // 1 second
+    private static final int TIME_SPAN = 5000; // 5 seconds
     private final Thread collisionDetection;
 
     private final VehicleData data;
     private final CDReading readingsList; // will be instantiated with the same object for all threads
     private final Direction direction;
     
+    private boolean justStartedCar;
     
     public Vehicle(VehicleData data, CDReading readingsList, Direction direction) {
         this.data = data;
         this.readingsList = readingsList;
         collisionDetection = new Thread(new CollisionDetection(readingsList, data));
+        collisionDetection.setName("CD for vehicle " + data.getName());
         this.direction = direction;
+        this.justStartedCar = true;
     }
 
     private void updateCoordinates() {
@@ -40,21 +43,23 @@ public class Vehicle implements Runnable {
             
             switch(direction) {
                 case EAST:
-                case SOUTH: {
+                case NORTH: {
                     speed = this.data.getSpeed();
                     break;
                 }
                 
-                case NORTH: {
-                    speed= this.data.getSpeed();
-                    break;
-                }
+                case SOUTH:
                 case WEST: {
                     speed = -this.data.getSpeed();
+                    break;
                 }
             }
             
-            this.data.setCoordinates(new VehicleData.Coordinates(
+            if(this.justStartedCar) {
+                // if the car just started, use the coordinates given
+                this.justStartedCar = false;
+            } else {
+                this.data.setCoordinates(new VehicleData.Coordinates(
                     new Point2D.Double((direction == Direction.WEST || direction == Direction.EAST
                                     ? this.data.getCoordinatesValues().getX() + speed 
                                     : this.data.getCoordinatesValues().getX()), 
@@ -62,6 +67,7 @@ public class Vehicle implements Runnable {
                                     ? this.data.getCoordinatesValues().getY() + speed : 
                                     this.data.getCoordinatesValues().getY())), 
                     new Date()));
+            }
             
             System.out.println("\nVehicle " + data.getName()
                     + " coordinates: (" + this.data.getCoordinatesValues().getX()
@@ -88,8 +94,8 @@ public class Vehicle implements Runnable {
 
         while (!Thread.currentThread().isInterrupted()) {
             try {
-                Thread.sleep(TIME_SPAN);
                 updateCoordinates();
+                Thread.sleep(TIME_SPAN);
                 //System.out.println("Readings count: " + readingsList.getVehicleReadings().size());
 
             } catch (InterruptedException ex) {

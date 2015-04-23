@@ -15,7 +15,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public class CDReading {
 
-    public static final int NUMBER_CARS = 3; // 3 cars by default
+    public static final int NUMBER_CARS = 2; // 3 cars by default
 
     private final CopyOnWriteArrayList<VehicleData> vehicleReadings;
 
@@ -41,7 +41,7 @@ public class CDReading {
     }
 
     public synchronized void addReading(VehicleData vehicleData) {
-        System.out.println("Number of readings before insertion: " + this.vehicleReadings.size());
+        System.out.println("\nNumber of readings before insertion: " + this.vehicleReadings.size());
 
         if (this.vehicleReadings.size() < NUMBER_CARS) { // less than the # of cars is okay, we can add without an issue
             this.vehicleReadings.add(vehicleData);
@@ -74,8 +74,12 @@ public class CDReading {
             }
         }
         
+        int i = 0;
         for (VehicleData vehicleReading : vehicleReadings) {
             System.out.println("Vehicle Readings: " + vehicleReading.getCoordinatesValues() + " " + vehicleReading.getName());
+            if(++i == NUMBER_CARS && vehicleReadings.size() == NUMBER_CARS * 2) {
+                System.out.println();
+            }
         }
     }
 }

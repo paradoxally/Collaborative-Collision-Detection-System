@@ -24,17 +24,17 @@ public class Main {
         
         // create vehicle threads
         Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", 
-                            new VehicleData.Coordinates(new Point2D.Double(0, 300), new Date()), 16.67,"Wet_Asphalt"), reading, Vehicle.Direction.EAST));
-        
-        
-        //Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", 
-        //                  new VehicleData.Coordinates(new Point2D.Double(200, 133.44), new Date()), 13.88), reading, Vehicle.Direction.SOUTH));
+                            new VehicleData.Coordinates(new Point2D.Double(0, 2), new Date()), 1, "Wet_Asphalt"), reading, Vehicle.Direction.EAST));
+        vehicleA.setName("Vehicle A");
+       
        
         Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", 
-                          new VehicleData.Coordinates(new Point2D.Double(200, 133.44), new Date()), 13.88,"Snow"), reading, Vehicle.Direction.SOUTH));
+                          new VehicleData.Coordinates(new Point2D.Double(31, 2), new Date()), 1.2, "Wet_Asphalt"), reading, Vehicle.Direction.WEST));
+        vehicleA.setName("Vehicle B");
+
         
-        Thread vehicleC= new Thread(new Vehicle(new VehicleData("C", 
-                          new VehicleData.Coordinates(new Point2D.Double(150, 100), new Date()), 15.00,"Ice"),reading,Vehicle.Direction.NORTH));
+        //Thread vehicleC= new Thread(new Vehicle(new VehicleData("C", 
+                          //new VehicleData.Coordinates(new Point2D.Double(150, 100), new Date()), 15.00,"Ice"),reading,Vehicle.Direction.NORTH));
         
         //veículo 3
       //  Thread vehicleC= new Thread(new Vehicle(new VehicleData("C", 
@@ -42,7 +42,7 @@ public class Main {
         
         vehicleA.start();
         vehicleB.start(); 
-        vehicleC.start();
+        //vehicleC.start();
     }
     
 }

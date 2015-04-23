@@ -53,7 +53,7 @@ public class CollisionDetection implements Runnable {
         int i = 0;
         for (String vehicleName : vehicleNames) {
             ArrayList<Integer> vehicleReadings = readingsList.getReadingsForVehicle(vehicleName);
-            System.out.println("Vehicle Readings for " + vehicleName + ": " + vehicleReadings);
+            System.out.println("\nVehicle Readings for " + vehicleName + ": " + vehicleReadings);
             Point2D.Double firstReading, secondReading;
 
             // check which is the first reading based on time
@@ -73,7 +73,7 @@ public class CollisionDetection implements Runnable {
         return distances;
     }
 
-    private synchronized double calculateClosestPoint(Point2D.Double[][] distances) {
+    /*private synchronized double calculateClosestPoint(Point2D.Double[][] distances) {
         double xW0 = -(distances[0][0].getX() - distances[1][0].getX());
         System.out.println("xWO: " + xW0);
         double yW0 = -(distances[0][0].getY() - distances[1][0].getY());
@@ -102,7 +102,7 @@ public class CollisionDetection implements Runnable {
         }
 
         return positions;
-    }
+    }*/
     
     public synchronized void roadCondition(String rCondition) {
         
@@ -149,13 +149,13 @@ public class CollisionDetection implements Runnable {
                 // wait for notifications from the vehicle that owns this CD system (new readings)
                 synchronized (Thread.currentThread()) { // the Vehicle class owns the thread object, so we can't use 'this'
                     Thread.currentThread().wait();
-                    System.out.println("I was notified: " + Thread.currentThread().getName());
+                    System.out.println("\nI was notified: " + Thread.currentThread().getName());
 
                     if (vehicleNames.isEmpty()) {    // arraylist filled only once (when system is asked to calculate distances for the first time) 
                         fillVehicleNames();
                     }
 
-                    Point2D.Double distances[][] = calculateDistanceTraveled();
+                    /*Point2D.Double distances[][] = calculateDistanceTraveled();
                     if (distances.length == CDReading.NUMBER_CARS) {
                         double closestPointSeconds = calculateClosestPoint(distances);
                         Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
@@ -168,7 +168,7 @@ public class CollisionDetection implements Runnable {
                             data.setSpeed(data.getSpeed() - data.getSpeed() * SPEED_REDUCTION);
                         }
                         roadCondition(rCondition);
-                    }
+                    }*/
                 }
             } catch (InterruptedException ex) {
                 Logger.getLogger(CollisionDetection.class.getName()).log(Level.SEVERE, null, ex);
