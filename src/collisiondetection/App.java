@@ -124,13 +124,13 @@ public class App extends JFrame implements ActionListener {
         super.paintComponent ( graphics );
         Graphics2D graphicsA = (Graphics2D) graphics;
         
-        graphicsA.setColor ( Color.RED ); //Identificação do primeiro vaiculo
+        graphicsA.setColor ( Color.RED ); //First vehicle identification
         graphicsA.fillOval(xCoor, yCoor,8,8); 
         
-        graphicsA.setColor ( Color.BLUE ); //Identificação do segundo veiculo 
+        graphicsA.setColor ( Color.BLUE ); //Second vehicle identification
         graphicsA.fillOval(xCoor1, yCoor1,8,8); 
         
-      //  graphicsA.setColor ( Color.CYAN ); //Identificação do terceiro veiculo 
+      //  graphicsA.setColor ( Color.CYAN ); //Third vehicle identification
       //  graphicsA.fillOval(xCoor2, yCoor2,8,8); 
         
     }
@@ -162,7 +162,7 @@ public class App extends JFrame implements ActionListener {
         
         //System.out.println(nextC.toString());
         
-        if (c1.x >1000 || c1.y > 1000 && c2.x > 1000 || c2.y > 1000 ) { //Verificação se os veículos passam da área limite definida
+        if (c1.x >1000 || c1.y > 1000 && c2.x > 1000 || c2.y > 1000 ) { //Check if vehicles cross the limited zone
             t.stop();
             setVisible(false);
         }
