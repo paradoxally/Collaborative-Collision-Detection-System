@@ -39,12 +39,13 @@ public class Main {
                           //new VehicleData.Coordinates(new Point2D.Double(150, 100), new Date()), 15.00,"Ice"),reading,Vehicle.Direction.NORTH));
         
         //veículo 3
-      //  Thread vehicleC= new Thread(new Vehicle(new VehicleData("C", 
-      //          new VehicleData.Coordinates(new Point2D.Double(150, 100), new Date()), 15.00),reading,Vehicle.Direction.NORTH));
+        Thread vehicleC= new Thread(new Vehicle(new VehicleData("C", 
+                new VehicleData.Coordinates(new Point2D.Double(150, 100), new Date()), 15.00,VehicleData.RoadCondition.SNOW),reading,Vehicle.Direction.NORTH));
+        vehicleC.setName("Vehicle C");    
         
         vehicleA.start();
         vehicleB.start();
-        //vehicleC.start();
+        vehicleC.start();
     }
     
 }

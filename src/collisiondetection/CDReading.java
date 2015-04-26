@@ -63,7 +63,8 @@ public class CDReading {
                         vehicleReadings.set(matchedReadingIndexes.get(0), vehicleReadings.get(matchedReadingIndexes.get(1)));
                         // and now we can replace it knowing we've saved the older reading
                         vehicleReadings.set(matchedReadingIndexes.get(1), vehicleData);
-                        
+                    break;
+                   
                     } else {
                         // same, but reversed
                         vehicleReadings.set(matchedReadingIndexes.get(1), vehicleReadings.get(matchedReadingIndexes.get(0)));
