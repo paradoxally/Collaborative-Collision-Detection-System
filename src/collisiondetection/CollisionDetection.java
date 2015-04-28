@@ -5,7 +5,9 @@
  */
 package collisiondetection;
 
+import collisiondetection.VehicleData.Direction;
 import java.awt.geom.Point2D;
+import static java.lang.Math.abs;
 import java.util.ArrayList;
 
 /**
@@ -38,6 +40,39 @@ public class CollisionDetection implements Runnable {
         }
         return vehicleNames;
     }
+    
+    
+    private synchronized boolean withinSafetyDistance(VehicleData firstVehicle, VehicleData secondVehicle) {
+        Direction direction;
+        // check if vehicles are both going in the same direction
+        if((direction = firstVehicle.getDirection()) == secondVehicle.getDirection()) {
+            Point2D.Double c1, c2;
+            c1 = firstVehicle.getCoordinatesValues();
+            c2 = secondVehicle.getCoordinatesValues();
+            double safetyDistance = firstVehicle.getRoadCondition().getSafetyDistance();
+            
+            switch(direction) {
+                case NORTH:
+                case SOUTH: {
+                    // depending on direction, check where they are located (must be same lane) and safety distance
+                    if(c1.getX() == c1.getX() && abs(c2.getY() - c1.getY()) >= safetyDistance) {
+                        return true;
+                    }
+                    break;
+                }
+                
+                case EAST:
+                case WEST: {
+                    if(c1.getY() == c1.getY() && abs(c2.getX() - c1.getX()) >= safetyDistance) {
+                        return true;
+                    }
+                    break;
+                }
+            }
+        }
+        
+        return false;
+    } 
 
     private synchronized Point2D.Double[][] calculateDistanceTraveled() {   // calculates distance traveled and returns coordinates according to parametric equations of type P(t) = P(0) + t(u), where P(0) is the first reading and u is the calculated distance between P1 - P0.
         Point2D.Double distances[][] = new Point2D.Double[CDReading.NUMBER_CARS][3];
@@ -110,6 +145,8 @@ public class CollisionDetection implements Runnable {
                     if (vehicleNames.isEmpty()) {    // arraylist filled only once (when system is asked to calculate distances for the first time) 
                         fillVehicleNames();
                     }
+                    
+                    //boolean distance = withinSafetyDistance(this.data, null);
 
                     /*Point2D.Double distances[][] = calculateDistanceTraveled();
                      if (distances.length == CDReading.NUMBER_CARS) {

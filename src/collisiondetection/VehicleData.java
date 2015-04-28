@@ -24,6 +24,10 @@ public class VehicleData implements Cloneable {
         }
     }
     
+     public enum Direction {
+        NORTH, SOUTH, WEST, EAST
+    }
+    
     public enum RoadCondition {
         DRY_ASPHALT(10.0),
         WET_ASPHALT(15.0),
@@ -46,13 +50,59 @@ public class VehicleData implements Cloneable {
     private final String name;              // name of the vehicle
     private Coordinates coordinates; 
     private double speed; 
+    private Direction direction;
     private RoadCondition roadCondition; // condition of the road (Wet, Dry, Snow, Ice)
 
-    public VehicleData(String name, Coordinates coordinates, double speed, RoadCondition roadCondition) {
+    public VehicleData(String name, Coordinates coordinates, double speed, Direction direction, RoadCondition roadCondition) {
         this.name = name;
         this.coordinates = coordinates;
         this.speed = speed;
+        this.direction = direction;
         this.roadCondition = roadCondition;
+    }
+    
+    // Checks if vehicle will be at the edge of the 1000 square mile area
+    public boolean willHitEdge() {
+        switch (this.direction) {
+            case NORTH:
+                if (this.getCoordinatesValues().getY() + calculateSpeed() > CollisionDetection.MAX_COORDINATE) {
+                    return true;
+                }
+                break;
+            case SOUTH:
+                if (this.getCoordinatesValues().getY() + calculateSpeed() < CollisionDetection.MIN_COORDINATE) {
+                    return true;
+                }
+                break;
+            case WEST:
+                if (this.getCoordinatesValues().getX() + calculateSpeed() < CollisionDetection.MIN_COORDINATE) {
+                    return true;
+                }
+                break;
+            case EAST:
+                if (this.getCoordinatesValues().getX() + calculateSpeed() > CollisionDetection.MAX_COORDINATE) {
+                    return true;
+                }
+                break;
+        }
+
+        return false;
+    }
+    
+    public double calculateSpeed() {
+        switch (direction) {
+            case EAST:
+            case NORTH: {
+                return this.getSpeed();
+            }
+
+            case SOUTH:
+            case WEST: {
+                return -this.getSpeed();
+            }
+            default:
+                return 0.0;
+        }
     }
     
     @Override
@@ -72,6 +122,13 @@ public class VehicleData implements Cloneable {
         this.speed = speed;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
     public RoadCondition getRoadCondition() {
         return roadCondition;
     }

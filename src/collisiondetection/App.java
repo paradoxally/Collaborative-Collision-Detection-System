@@ -66,19 +66,19 @@ public class App extends JFrame implements ActionListener {
     
     VehicleData v = new VehicleData("A", 
                             new VehicleData.Coordinates(new Point2D.Double(0.0, 150.0), new Date()), 
-                15.0, VehicleData.RoadCondition.DRY_ASPHALT); 
+                15.0,  VehicleData.Direction.WEST, VehicleData.RoadCondition.DRY_ASPHALT); 
     
     VehicleData v2 = new VehicleData("B", 
                           new VehicleData.Coordinates(new Point2D.Double(310.0, 150.0), new Date()),
-                20.0, VehicleData.RoadCondition.DRY_ASPHALT); 
+                20.0, VehicleData.Direction.EAST, VehicleData.RoadCondition.DRY_ASPHALT); 
     
    // VehicleData v3= new VehicleData("C", 
    //             new VehicleData.Coordinates(new Point2D.Double(150, 30), new Date()), 15.00,VehicleData.RoadCondition.DRY_ASPHALT);
     
     // create vehicle threads
-        Thread vehicleA = new Thread(new Vehicle(v, reading, Vehicle.Direction.EAST));
+        Thread vehicleA = new Thread(new Vehicle(v, reading));
         
-        Thread vehicleB = new Thread(new Vehicle(v2, reading, Vehicle.Direction.WEST));
+        Thread vehicleB = new Thread(new Vehicle(v2, reading));
    
     //    Thread vehicleC = new Thread(new Vehicle(v3, reading, Vehicle.Direction.NORTH));
         
