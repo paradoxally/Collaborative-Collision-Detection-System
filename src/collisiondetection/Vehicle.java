@@ -16,7 +16,7 @@ import java.util.logging.Logger;
  * @author Nino
  */
 public class Vehicle implements Runnable {
-    private static final int TIME_SPAN = 5000; // 5 seconds
+    private static final int TIME_SPAN = 1000; // 5 seconds
     private final Thread collisionDetection;
 
     private final VehicleData data;

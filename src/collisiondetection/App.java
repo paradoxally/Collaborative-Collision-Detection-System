@@ -25,7 +25,7 @@ public class App extends JFrame implements ActionListener {
   public App() {
     setResizable(false);
     setTitle("Collision Test - v1");
-    setSize(800, 600);
+    setSize(310, 310);
     setLocationRelativeTo(null);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout());
@@ -66,11 +66,11 @@ public class App extends JFrame implements ActionListener {
     
     VehicleData v = new VehicleData("A", 
                             new VehicleData.Coordinates(new Point2D.Double(0.0, 150.0), new Date()), 
-                15.0,  VehicleData.Direction.WEST, VehicleData.RoadCondition.DRY_ASPHALT); 
+                15.0,  VehicleData.Direction.EAST, VehicleData.RoadCondition.DRY_ASPHALT); 
     
     VehicleData v2 = new VehicleData("B", 
                           new VehicleData.Coordinates(new Point2D.Double(310.0, 150.0), new Date()),
-                20.0, VehicleData.Direction.EAST, VehicleData.RoadCondition.DRY_ASPHALT); 
+                20.0, VehicleData.Direction.WEST, VehicleData.RoadCondition.DRY_ASPHALT); 
     
    // VehicleData v3= new VehicleData("C", 
    //             new VehicleData.Coordinates(new Point2D.Double(150, 30), new Date()), 15.00,VehicleData.RoadCondition.DRY_ASPHALT);
@@ -128,7 +128,7 @@ public class App extends JFrame implements ActionListener {
         graphicsA.fillOval(xCoor, yCoor,8,8); 
         
         graphicsA.setColor ( Color.BLUE ); //Second vehicle identification
-        graphicsA.fillOval(xCoor1, yCoor1,8,8); 
+        graphicsA.fillOval(xCoor1 - 8, yCoor1,8,8); 
         
       //  graphicsA.setColor ( Color.CYAN ); //Third vehicle identification
       //  graphicsA.fillOval(xCoor2, yCoor2,8,8); 
