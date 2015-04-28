@@ -9,6 +9,7 @@ import collisiondetection.VehicleData.Direction;
 import java.awt.geom.Point2D;
 import static java.lang.Math.abs;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
@@ -20,6 +21,11 @@ public class CollisionDetection implements Runnable {
     
     //private static final double SAFE_DISTANCE = 7.5;
     private static final double SPEED_REDUCTION = 0.05;
+    
+    
+    private enum SafetyConditions {
+        DIFFERENT_DIRECTIONS, DIFFERENT_LANES, NOT_WITHIN_DISTANCE, WITHIN_DISTANCE
+    }
 
     private final CDReading readingsList;
     private final VehicleData data;
@@ -42,7 +48,7 @@ public class CollisionDetection implements Runnable {
     }
     
     
-    private synchronized boolean withinSafetyDistance(VehicleData firstVehicle, VehicleData secondVehicle) {
+    private synchronized SafetyConditions withinSafetyDistance(VehicleData firstVehicle, VehicleData secondVehicle) {
         Direction direction;
         // check if vehicles are both going in the same direction
         if((direction = firstVehicle.getDirection()) == secondVehicle.getDirection()) {
@@ -55,23 +61,35 @@ public class CollisionDetection implements Runnable {
                 case NORTH:
                 case SOUTH: {
                     // depending on direction, check where they are located (must be same lane) and safety distance
-                    if(c1.getX() == c1.getX() && abs(c2.getY() - c1.getY()) >= safetyDistance) {
-                        return true;
+                    if(c1.getX() == c2.getX()) {
+                        if (abs(c2.getY() - c1.getY()) >= safetyDistance) {
+                            return SafetyConditions.WITHIN_DISTANCE;
+                        } 
+                    } else {
+                        return SafetyConditions.DIFFERENT_LANES;
                     }
                     break;
                 }
                 
                 case EAST:
                 case WEST: {
-                    if(c1.getY() == c1.getY() && abs(c2.getX() - c1.getX()) >= safetyDistance) {
-                        return true;
+                    if(c1.getY() == c2.getY()) {
+                        System.out.format("C1 X: %f\nC2 X: %f\n", c1.getX(), c2.getX());
+                        System.out.println("Distances: " + abs(c2.getX() - c1.getX()));
+                        if (abs(c2.getX() - c1.getX()) >= safetyDistance) {
+                            return SafetyConditions.WITHIN_DISTANCE;
+                        } 
+                    } else {
+                        return SafetyConditions.DIFFERENT_LANES;
                     }
                     break;
                 }
             }
+            
+            return SafetyConditions.NOT_WITHIN_DISTANCE;
+        } else {
+            return SafetyConditions.DIFFERENT_DIRECTIONS;
         }
-        
-        return false;
     } 
 
     private synchronized Point2D.Double[][] calculateDistanceTraveled() {   // calculates distance traveled and returns coordinates according to parametric equations of type P(t) = P(0) + t(u), where P(0) is the first reading and u is the calculated distance between P1 - P0.
@@ -146,8 +164,22 @@ public class CollisionDetection implements Runnable {
                         fillVehicleNames();
                     }
                     
-                    //boolean distance = withinSafetyDistance(this.data, null);
+                    //boolean distance = withinSafetyDistance(this.data, readingsList.getReadingsForVehicle());
+                    HashMap<String, SafetyConditions> safetyDistanceChecks = new HashMap<>();
+                    for(String vehicleName: vehicleNames) {
+                        if(!vehicleName.equals(this.data.getName())) {
+                           safetyDistanceChecks.put(vehicleName, withinSafetyDistance(readingsList.getVehicleDataForName(this.data.getName()), readingsList.getVehicleDataForName(vehicleName)));
 
+                        }
+                    }
+                    
+                    System.out.println("CD for vehicle " + this.data.getName() + ": " + safetyDistanceChecks);
+                    
+                    if(safetyDistanceChecks.size() > 0) {
+                        
+                    }
+                    
+                    
                     /*Point2D.Double distances[][] = calculateDistanceTraveled();
                      if (distances.length == CDReading.NUMBER_CARS) {
                      double closestPointSeconds = calculateClosestPoint(distances);

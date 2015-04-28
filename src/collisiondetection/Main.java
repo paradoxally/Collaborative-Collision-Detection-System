@@ -25,13 +25,13 @@ public class Main {
         // create vehicle threads
         Thread vehicleA = new Thread(new Vehicle(new VehicleData("A", 
                             new VehicleData.Coordinates(new Point2D.Double(0.0, 150.0), new Date()), 
-                15.0, VehicleData.Direction.EAST, VehicleData.RoadCondition.DRY_ASPHALT), reading));
+                2.5, VehicleData.Direction.EAST, VehicleData.RoadCondition.DRY_ASPHALT), reading));
         vehicleA.setName("Vehicle A");
        
        
         Thread vehicleB = new Thread(new Vehicle(new VehicleData("B", 
-                          new VehicleData.Coordinates(new Point2D.Double(310.0, 150.0), new Date()),
-                20.0, VehicleData.Direction.WEST, VehicleData.RoadCondition.DRY_ASPHALT), reading));
+                          new VehicleData.Coordinates(new Point2D.Double(7.5, 150.0), new Date()),
+                2.5, VehicleData.Direction.EAST, VehicleData.RoadCondition.DRY_ASPHALT), reading));
         vehicleA.setName("Vehicle B");
         
         //veículo 3

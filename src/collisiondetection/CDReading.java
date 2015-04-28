@@ -26,6 +26,16 @@ public class CDReading {
     public CopyOnWriteArrayList<VehicleData> getVehicleReadings() {
         return vehicleReadings;
     }
+    
+    public synchronized VehicleData getVehicleDataForName(String vehicleName) {
+        for(VehicleData vehicleReading : vehicleReadings) {
+            if (vehicleReading.getName().equals(vehicleName)) {
+                return vehicleReading;
+            }    
+        }
+        
+        return null;
+    }
 
     public synchronized ArrayList<Integer> getReadingsForVehicle(String vehicleName) {
         ArrayList<Integer> matchedReadingIndexes = new ArrayList<>();
