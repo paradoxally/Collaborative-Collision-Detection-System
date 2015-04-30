@@ -19,7 +19,7 @@ public class CollisionDetection implements Runnable {
     public static final double MIN_COORDINATE = 0.0;
     public static final double MAX_COORDINATE = 310.0;
     
-    //private static final double SAFE_DISTANCE = 7.5;
+    private static final double SAFE_DISTANCE = 7.5;
     private static final double SPEED_REDUCTION = 0.05;
     
     
@@ -119,15 +119,18 @@ public class CollisionDetection implements Runnable {
         return distances;
     }
 
-    /*private synchronized double calculateClosestPoint(Point2D.Double[][] distances) {
-     double xW0 = -(distances[0][0].getX() - distances[1][0].getX());
+    private synchronized double calculateClosestPoint(Point2D.Double[][] distances) {  
+    
+     double xW0 = -(distances[0][0].getX() - distances[1][0].getX()); //W=P0-Q0
      System.out.println("xWO: " + xW0);
      double yW0 = -(distances[0][0].getY() - distances[1][0].getY());
      System.out.println("yWO: " + yW0);
      double u = distances[0][1].getX() + distances[1][1].getX();
-     System.out.println("u: " + u);
+     
+     System.out.println("u: " + u);// u= P1-P0
+     
      double v = -(distances[0][1].getY() + distances[1][1].getY());
-     System.out.println("v: " + v);
+     System.out.println("v: " + v); //v= Q1-Q0
      System.out.println("Numerator: " + Math.abs((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v)));
      System.out.println("Denominator: " + (Math.pow(u, 2) + Math.pow(v, 2)));
      double closestPoint = Math.abs(((xW0 * u) + (xW0 * v) - (yW0 * u) + (yW0 * v))) / (Math.pow(u, 2) + Math.pow(v, 2));
@@ -148,7 +151,7 @@ public class CollisionDetection implements Runnable {
      }
 
      return positions;
-     }*/
+     }
     
     
     @Override
@@ -159,12 +162,29 @@ public class CollisionDetection implements Runnable {
                 synchronized (Thread.currentThread()) { // the Vehicle class owns the thread object, so we can't use 'this'
                     Thread.currentThread().wait();
                     System.out.println("\nI was notified: " + Thread.currentThread().getName());
-
+                    
                     if (vehicleNames.isEmpty()) {    // arraylist filled only once (when system is asked to calculate distances for the first time) 
                         fillVehicleNames();
                     }
                     
-                    //boolean distance = withinSafetyDistance(this.data, readingsList.getReadingsForVehicle());
+                    Point2D.Double distances[][] = calculateDistanceTraveled(); 
+                 
+                     if (distances.length == CDReading.NUMBER_CARS) {
+                     double closestPointSeconds = calculateClosestPoint(distances);
+                     Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances); 
+                     
+                     // assuming only TWO cars in this check
+                     double closestPoint= calculateClosestPoint(distances);
+                     double distance = positions[0].distance(positions[1]);
+                     System.out.println("Distance: " + distance + "\nSpeed: " + data.getSpeed()); 
+                     
+                     if (closestPoint < SAFE_DISTANCE) { // Intersection condition
+                         System.out.println("The vehicles are in risk of collision, changing direction to vehicle A");
+                        data.setDirection(Direction.SOUTH);
+                     }
+                     }
+                    
+                  //  boolean distance = withinSafetyDistance(this.data, readingsList.getReadingsForVehicle());
                     HashMap<String, SafetyConditions> safetyDistanceChecks = new HashMap<>();
                     for(String vehicleName: vehicleNames) {
                         if(!vehicleName.equals(this.data.getName())) {
@@ -173,7 +193,7 @@ public class CollisionDetection implements Runnable {
                         }
                     }
                     
-                    System.out.println("CD for vehicle " + this.data.getName() + ": " + safetyDistanceChecks);
+                   System.out.println("CD for vehicle " + this.data.getName() + ": " + safetyDistanceChecks);
                     
                     if(safetyDistanceChecks.size() > 0) {
                         
@@ -195,10 +215,13 @@ public class CollisionDetection implements Runnable {
                      roadCondition(rCondition);
                      }*/
                 }
+                
             } catch (InterruptedException ex) {
                 System.err.println("Vehicle " + this.data.getName() + "'s collision detection system has terminated.");
-                return;
-            }
+                return;         
+                    
+          
         }
+    }
     }
 }
