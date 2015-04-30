@@ -5,8 +5,10 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.Date;
+import java.util.Random;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -15,8 +17,13 @@ import javax.swing.Timer;
 
 public class App extends JFrame implements ActionListener {
 
-  private static final long serialVersionUID = 1L;
-
+ private static final long serialVersionUID = 1L;
+   
+  
+  Random ran = new Random(); //Generates random position to an obstacle
+  int xran = ran.nextInt(100) + 40;
+  int yran= ran.nextInt(100)+ 45;
+  
   public static void main(String[] a) {
     App app = new App();
     app.createControls();
@@ -25,21 +32,22 @@ public class App extends JFrame implements ActionListener {
   public App() {
     setResizable(false);
     setTitle("Collision Test - v1");
-    setSize(310, 310);
+    setSize(320, 320);
     setLocationRelativeTo(null);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setLayout(new BorderLayout());
+    setLayout(new BorderLayout()); 
+    
   }
 
   private void createControls() {
-    JPanel upper = new JPanel();
-
+    JPanel upper = new JPanel(); 
     JButton fire = new JButton("Start");
     fire.addActionListener(this);
-    upper.add(fire);
+    upper.add(fire); 
 
     this.add(upper, BorderLayout.NORTH);
-    setVisible(true);
+    setVisible(true); 
+  
   }
 
   /*
@@ -49,7 +57,6 @@ public class App extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     AttackFX attackfx = new AttackFX();
-
     this.add(attackfx, BorderLayout.CENTER);
     this.validate();
   }
@@ -118,22 +125,28 @@ public class App extends JFrame implements ActionListener {
     }
     
     
-
     @Override
     public void paintComponent ( Graphics graphics ) {
         super.paintComponent ( graphics );
-        Graphics2D graphicsA = (Graphics2D) graphics;
+        Graphics2D graphicsA = (Graphics2D) graphics;   
+        Line2D lin = new Line2D.Float(0, 8, 320, 8);
+       
+        graphicsA.setColor(Color.BLACK); 
+        graphicsA.draw(lin);
         
         graphicsA.setColor ( Color.RED ); //First vehicle identification
         graphicsA.fillOval(xCoor, yCoor,8,8); 
         
         graphicsA.setColor ( Color.BLUE ); //Second vehicle identification
-        graphicsA.fillOval(xCoor1 - 8, yCoor1,8,8); 
+        graphicsA.fillOval(xCoor1 - 8, yCoor1,8,8);  
         
-      //  graphicsA.setColor ( Color.CYAN ); //Third vehicle identification
-      //  graphicsA.fillOval(xCoor2, yCoor2,8,8); 
+        graphicsA.setColor(Color.YELLOW); //Random obstacle
+        graphicsA.fillRect(xran, yran, 5, 5);
         
-    }
+        //graphicsA.setColor ( Color.CYAN ); //Third vehicle identification
+        //graphicsA.fillOval(xCoor2, yCoor2,8,8); 
+        
+        }
 
     /*
      * The timer will fire an action every 10 milliseconds, moving
