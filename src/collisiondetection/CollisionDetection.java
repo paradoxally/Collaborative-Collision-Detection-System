@@ -11,7 +11,6 @@ import static java.lang.Math.abs;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -191,7 +190,7 @@ public class CollisionDetection implements Runnable {
             }
         }
     }
-
+    
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {

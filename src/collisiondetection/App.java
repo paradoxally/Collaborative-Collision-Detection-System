@@ -17,8 +17,7 @@ import javax.swing.Timer;
 
 public class App extends JFrame implements ActionListener {
 
- private static final long serialVersionUID = 1L;
-   
+ private static final long serialVersionUID = 1L;   
   
   Random ran = new Random(); //Generates random position to an obstacle
   int xran = ran.nextInt(100) + 40;
@@ -51,17 +50,17 @@ public class App extends JFrame implements ActionListener {
   }
 
   /*
-   * When the "Attack" button is pressed the time will start and the
-   * circle will start painting.
+   * When the "Start" button is pressed the time will start and the
+   * vehicle simulation will initiate.
    */
   @Override
   public void actionPerformed(ActionEvent e) {
-    AttackFX attackfx = new AttackFX();
-    this.add(attackfx, BorderLayout.CENTER);
+    VehicleDraw vehicledraw = new VehicleDraw();
+    this.add(vehicledraw, BorderLayout.CENTER);
     this.validate();
   }
 
-  class AttackFX extends JPanel implements ActionListener {
+  class VehicleDraw extends JPanel implements ActionListener {
     
     private static final long serialVersionUID = 1L;
     
@@ -114,8 +113,7 @@ public class App extends JFrame implements ActionListener {
     private final Timer t;
        
 
-    public AttackFX() {
-           
+    public VehicleDraw() {
         t = new Timer(500, this);
         t.start(); 
         
@@ -126,7 +124,7 @@ public class App extends JFrame implements ActionListener {
     
     
     @Override
-    public void paintComponent ( Graphics graphics ) {
+    public void paintComponent(Graphics graphics) {
         super.paintComponent ( graphics );
         Graphics2D graphicsA = (Graphics2D) graphics;   
         Line2D lin = new Line2D.Float(0, 8, 320, 8);
@@ -138,9 +136,9 @@ public class App extends JFrame implements ActionListener {
         graphicsA.fillOval(xCoor, yCoor,8,8); 
         
         graphicsA.setColor ( Color.BLUE ); //Second vehicle identification
-        graphicsA.fillOval(xCoor1 - 8, yCoor1,8,8);  
+        graphicsA.fillOval(xCoor1, yCoor1,8,8);  
         
-        graphicsA.setColor(Color.YELLOW); //Random obstacle
+        graphicsA.setColor(Color.ORANGE); //Random obstacle
         graphicsA.fillRect(xran, yran, 5, 5);
         
         //graphicsA.setColor ( Color.CYAN ); //Third vehicle identification
@@ -149,11 +147,9 @@ public class App extends JFrame implements ActionListener {
         }
 
     /*
-     * The timer will fire an action every 10 milliseconds, moving
-     * our circle by 1 each time.
+     * The timer will fire an action every TIME_SPAN, moving
+     * our vehicles by the appropriate speed each time.
      * 
-     * I unfortunately had to hard code a value that the circle should stop at
-     * but I am sure you can find a way around this.
      */
 
         @Override
@@ -175,7 +171,7 @@ public class App extends JFrame implements ActionListener {
         
         //System.out.println(nextC.toString());
         
-        if (c1.x >1000 || c1.y > 1000 && c2.x > 1000 || c2.y > 1000 ) { //Check if vehicles cross the limited zone
+        if (c1.x >320 || c1.y > 320 && c2.x > 320 || c2.y > 320 ) { //Check if vehicles cross the limited zone
             t.stop();
             setVisible(false);
         }
