@@ -19,6 +19,8 @@ public class App extends JFrame implements ActionListener {
 
  private static final long serialVersionUID = 1L;   
   
+  private JButton fire;
+ 
   Random ran = new Random(); //Generates random position to an obstacle
   int xran = ran.nextInt(100) + 40;
   int yran= ran.nextInt(100)+ 45;
@@ -31,16 +33,15 @@ public class App extends JFrame implements ActionListener {
   public App() {
     setResizable(false);
     setTitle("Collision Test - v1");
-    setSize(320, 320);
+    setSize(320, 380);
     setLocationRelativeTo(null);
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     setLayout(new BorderLayout()); 
-    
   }
 
   private void createControls() {
     JPanel upper = new JPanel(); 
-    JButton fire = new JButton("Start");
+    fire = new JButton("Start");
     fire.addActionListener(this);
     upper.add(fire); 
 
@@ -55,6 +56,7 @@ public class App extends JFrame implements ActionListener {
    */
   @Override
   public void actionPerformed(ActionEvent e) {
+    this.fire.setEnabled(false);
     VehicleDraw vehicledraw = new VehicleDraw();
     this.add(vehicledraw, BorderLayout.CENTER);
     this.validate();
