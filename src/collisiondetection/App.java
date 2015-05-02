@@ -139,7 +139,7 @@ public class App extends JFrame implements ActionListener {
         graphicsA.fillOval(xCoor, yCoor,8,8); 
         
         graphicsA.setColor ( Color.BLUE ); //Second vehicle identification
-        graphicsA.fillOval(xCoor1, yCoor1,8,8);  
+        graphicsA.fillOval(xCoor1-8, yCoor1,8,8);  
         
         graphicsA.setColor(Color.ORANGE); //Random obstacle
         graphicsA.fillRect(xran, yran, 5, 5);
