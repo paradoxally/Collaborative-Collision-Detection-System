@@ -80,15 +80,16 @@ public class App extends JFrame implements ActionListener {
                           new VehicleData.Coordinates(new Point2D.Double(310.0, 150.0), new Date()),
                 20.0, VehicleData.Direction.WEST, VehicleData.RoadCondition.DRY_ASPHALT); 
     
-   // VehicleData v3= new VehicleData("C", 
-   //             new VehicleData.Coordinates(new Point2D.Double(150, 30), new Date()), 15.00,VehicleData.RoadCondition.DRY_ASPHALT);
+    VehicleData v3= new VehicleData("C", 
+                new VehicleData.Coordinates(new Point2D.Double(150, 30), new Date()), 20.00,
+            VehicleData.Direction.SOUTH, VehicleData.RoadCondition.DRY_ASPHALT);
     
     // create vehicle threads
         Thread vehicleA = new Thread(new Vehicle(v, reading));
         
         Thread vehicleB = new Thread(new Vehicle(v2, reading));
    
-    //    Thread vehicleC = new Thread(new Vehicle(v3, reading, Vehicle.Direction.NORTH));
+        Thread vehicleC = new Thread(new Vehicle(v3, reading));
         
        
     //Get coordinates of each vehicle
@@ -102,10 +103,10 @@ public class App extends JFrame implements ActionListener {
     private int xCoor1 = (int)c2.getX();
     private int yCoor1 = (int)c2.getY();
     
-   // Point2D.Double c3= v3.getCoordinatesValues();
+    Point2D.Double c3= v3.getCoordinatesValues();
    
-  // private int xCoor2 = (int)c3.getX();
-  //  private int yCoor2 = (int)c3.getY();
+   private int xCoor2 = (int)c3.getX();
+    private int yCoor2 = (int)c3.getY();
     
     
    // private Coordinates coor = new VehicleData.Coordinates(new Point2D.Double(0, 300), new Date());
@@ -121,7 +122,7 @@ public class App extends JFrame implements ActionListener {
         
         vehicleA.start(); 
         vehicleB.start();
-     //   vehicleC.start();
+        vehicleC.start();
     }
     
     
@@ -143,8 +144,8 @@ public class App extends JFrame implements ActionListener {
         graphicsA.setColor(Color.ORANGE); //Random obstacle
         graphicsA.fillRect(xran, yran, 5, 5);
         
-        //graphicsA.setColor ( Color.CYAN ); //Third vehicle identification
-        //graphicsA.fillOval(xCoor2, yCoor2,8,8); 
+        graphicsA.setColor ( Color.CYAN ); //Third vehicle identification
+        graphicsA.fillOval(xCoor2, yCoor2,8,8); 
         
         }
 
@@ -159,7 +160,7 @@ public class App extends JFrame implements ActionListener {
         //Coordinates nextC = v.nextPoint(time);
        Point2D.Double c1= v.getCoordinatesValues();
        Point2D.Double c2= v2.getCoordinatesValues();
-     //  Point2D.Double c3= v3.getCoordinatesValues();
+      Point2D.Double c3= v3.getCoordinatesValues();
        
         xCoor = (int)c1.getX(); 
         yCoor = (int)c1.getY();  
@@ -167,8 +168,8 @@ public class App extends JFrame implements ActionListener {
         xCoor1 = (int)c2.getX(); 
         yCoor1 = (int)c2.getY();  
         
-     //   xCoor2 = (int)c3.getX(); 
-     //   yCoor2 = (int)c3.getY(); 
+       xCoor2 = (int)c3.getX(); 
+        yCoor2 = (int)c3.getY(); 
         
         
         //System.out.println(nextC.toString());
@@ -183,8 +184,8 @@ public class App extends JFrame implements ActionListener {
         yCoor++;
         xCoor1++;
         yCoor1++; 
-       // xCoor2++;
-       // yCoor2++; 
+        xCoor2++;
+        yCoor2++; 
         repaint();        
         }
     

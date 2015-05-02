@@ -141,7 +141,7 @@ public class CollisionDetection implements Runnable {
     }
 
     private synchronized Point2D.Double[] calculateVehiclesPositionAtPoint(double closestPointSeconds, Point2D.Double[][] distances) {
-        Point2D.Double[] positions = new Point2D.Double[CDReading.NUMBER_CARS];
+        Point2D.Double[] positions = new Point2D.Double[2];
 
         int i = 0;
         for (Point2D.Double[] distance : distances) {   // for each car
@@ -218,11 +218,12 @@ public class CollisionDetection implements Runnable {
                                     || thisVehicleDirection == Direction.SOUTH && thatVehicleDirection == Direction.NORTH
                                     || thisVehicleDirection == Direction.WEST && thatVehicleDirection == Direction.EAST
                                     || thisVehicleDirection == Direction.EAST && thatVehicleDirection == Direction.WEST) {
+                                System.err.println("HEAD ON COLLISION!!!!!");
                                 String[] vehicles = {this.data.getName(), (String) vehicleSafetyRelationship.getKey()};
 
                                 Point2D.Double distances[][] = calculateDistanceTraveled(vehicles);
 
-                                if (distances.length == CDReading.NUMBER_CARS) {
+                                if (distances.length == 2) {
                                     double closestPointSeconds = calculateClosestPoint(distances);
                                     Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
 
