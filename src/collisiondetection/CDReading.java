@@ -18,11 +18,20 @@ public class CDReading {
     public static final int NUMBER_CARS = 2; // 3 cars by default
 
     private final CopyOnWriteArrayList<VehicleData> vehicleReadings;
+    private boolean changedDirection;
 
     public CDReading() {
         this.vehicleReadings = new CopyOnWriteArrayList<>();
+        this.changedDirection = false;
     }
 
+    public boolean hasDirectionChanged() {
+        return changedDirection;
+    }
+
+    public void setChangedDirection(boolean changedDirection) {
+        this.changedDirection = changedDirection;
+    }
     public CopyOnWriteArrayList<VehicleData> getVehicleReadings() {
         return vehicleReadings;
     }

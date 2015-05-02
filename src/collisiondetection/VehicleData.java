@@ -3,41 +3,55 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package collisiondetection;
 
 import java.awt.geom.Point2D;
+import java.security.SecureRandom;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
  * @author Nino
  */
 public class VehicleData implements Cloneable {
+
     public static class Coordinates {
+
         private final Point2D.Double coordinates; // current coordinates of the vehicle in 2D space
         private final Date registeredTime;        // current time
-        
+
         public Coordinates(Point2D.Double coordinates, Date registeredTime) {
             this.coordinates = coordinates;
             this.registeredTime = registeredTime;
         }
     }
-    
-     public enum Direction {
-        NORTH, SOUTH, WEST, EAST
+
+    public enum Direction {
+        NORTH, SOUTH, WEST, EAST;
+
+        private static final List<Direction> directions = Collections.unmodifiableList(Arrays.asList(values()));
+        private static final int size = directions.size();
+        private static final SecureRandom random = new SecureRandom();
+
+        public static Direction randomDirection() {
+            return directions.get(random.nextInt(size));
+        }
     }
-    
+
     public enum RoadCondition {
+
         DRY_ASPHALT(10.0),
         WET_ASPHALT(15.0),
         DRY_CONCRETE(20.0),
         WET_CONCRETE(25.0),
         SNOW(45.0),
         ICE(70.0);
-        
+
         private final double safetyDistance;
-        
+
         RoadCondition(double safetyDistance) {
             this.safetyDistance = safetyDistance;
         }
@@ -46,10 +60,10 @@ public class VehicleData implements Cloneable {
             return safetyDistance;
         }
     }
-    
+
     private final String name;              // name of the vehicle
-    private Coordinates coordinates; 
-    private double speed; 
+    private Coordinates coordinates;
+    private double speed;
     private Direction direction;
     private RoadCondition roadCondition; // condition of the road (Wet, Dry, Snow, Ice)
 
@@ -60,17 +74,17 @@ public class VehicleData implements Cloneable {
         this.direction = direction;
         this.roadCondition = roadCondition;
     }
-    
-    // Checks if vehicle will be at the edge of the 1000 square mile area
-    public boolean willHitEdge() {
-        switch (this.direction) {
+
+    // Checks if vehicle will be at the edge of the 1000 square mile area given its direction
+    public boolean willHitEdge(Direction direction) {
+        switch (direction) {
             case NORTH:
-                if (this.getCoordinatesValues().getY() + calculateSpeed() > CollisionDetection.MAX_COORDINATE) {
+                if (this.getCoordinatesValues().getY() + calculateSpeed() < CollisionDetection.MIN_COORDINATE) {
                     return true;
                 }
                 break;
             case SOUTH:
-                if (this.getCoordinatesValues().getY() + calculateSpeed() < CollisionDetection.MIN_COORDINATE) {
+                if (this.getCoordinatesValues().getY() + calculateSpeed() > CollisionDetection.MAX_COORDINATE) {
                     return true;
                 }
                 break;
@@ -88,15 +102,15 @@ public class VehicleData implements Cloneable {
 
         return false;
     }
-    
+
     public double calculateSpeed() {
         switch (direction) {
             case EAST:
-            case NORTH: {
+            case SOUTH: {
                 return this.getSpeed();
             }
 
-            case SOUTH:
+            case NORTH:
             case WEST: {
                 return -this.getSpeed();
             }
@@ -104,12 +118,12 @@ public class VehicleData implements Cloneable {
                 return 0.0;
         }
     }
-    
+
     @Override
     protected Object clone() throws CloneNotSupportedException {
         return super.clone();
     }
-    
+
     public String getName() {
         return name;
     }
@@ -129,6 +143,7 @@ public class VehicleData implements Cloneable {
     public void setDirection(Direction direction) {
         this.direction = direction;
     }
+
     public RoadCondition getRoadCondition() {
         return roadCondition;
     }
@@ -136,7 +151,7 @@ public class VehicleData implements Cloneable {
     public void setRoadCondition(RoadCondition roadCondition) {
         this.roadCondition = roadCondition;
     }
-    
+
     public void setCoordinates(Coordinates coordinates) {
         this.coordinates = coordinates;
     }
@@ -144,17 +159,16 @@ public class VehicleData implements Cloneable {
     public Date getCoordinatesRegisteredDate() {
         return coordinates.registeredTime;
     }
-    
+
     public Point2D.Double getCoordinatesValues() {
         return coordinates.coordinates;
     }
 
     @Override
     public String toString() {
-        return String.format("Road condition: %s (safety distance: %.1f)", 
-                this.getRoadCondition(), 
+        return String.format("Road condition: %s (safety distance: %.1f)",
+                this.getRoadCondition(),
                 this.getRoadCondition().getSafetyDistance());
     }
-    
-    
+
 }

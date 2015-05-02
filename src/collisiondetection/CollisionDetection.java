@@ -22,8 +22,7 @@ public class CollisionDetection implements Runnable {
     public static final double MIN_COORDINATE = 0.0;
     public static final double MAX_COORDINATE = 310.0;
 
-    private static final double SAFE_DISTANCE = 7.5;
-    private static final double SPEED_REDUCTION = 0.05;
+    private static final double SAFE_DISTANCE = 15.0;
 
     private enum SafetyConditions {
 
@@ -94,8 +93,8 @@ public class CollisionDetection implements Runnable {
         }
     }
 
-    private synchronized Point2D.Double[][] calculateDistanceTraveled() {   // calculates distance traveled and returns coordinates according to parametric equations of type P(t) = P(0) + t(u), where P(0) is the first reading and u is the calculated distance between P1 - P0.
-        Point2D.Double distances[][] = new Point2D.Double[CDReading.NUMBER_CARS][3];
+    private synchronized Point2D.Double[][] calculateDistanceTraveled(String[] vehicleNames) {   // calculates distance traveled and returns coordinates according to parametric equations of type P(t) = P(0) + t(u), where P(0) is the first reading and u is the calculated distance between P1 - P0.
+        Point2D.Double distances[][] = new Point2D.Double[2][3];
 
         // for each vehicle, calculate distance traveled
         int i = 0;
@@ -190,7 +189,7 @@ public class CollisionDetection implements Runnable {
             }
         }
     }
-    
+
     @Override
     public void run() {
         while (!Thread.currentThread().isInterrupted()) {
@@ -204,26 +203,62 @@ public class CollisionDetection implements Runnable {
                         fillVehicleNames();
                     }
 
-                    Point2D.Double distances[][] = calculateDistanceTraveled();
-
-                    if (distances.length == CDReading.NUMBER_CARS) {
-                        double closestPointSeconds = calculateClosestPoint(distances);
-                        Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
-
-                        // assuming only TWO cars in this check
-                        double closestPoint = calculateClosestPoint(distances);
-                        double distance = positions[0].distance(positions[1]);
-                        System.out.println("Distance: " + distance + "\nSpeed: " + data.getSpeed());
-
-                        if (closestPoint < SAFE_DISTANCE) { // Intersection condition
-                            System.out.println("The vehicles are in risk of collision, changing direction to vehicle A");
-                            data.setDirection(Direction.SOUTH);
-                        }
-                    }
-
                     // Deal with safety distance checking
                     HashMap<String, SafetyConditions> safetyDistanceChecks = checkSafetyDistancesForAllVehicles();
                     enforceSafetyDistanceChecks(safetyDistanceChecks);
+
+                    // If different directions, check head-on collision
+                    for (Map.Entry vehicleSafetyRelationship : safetyDistanceChecks.entrySet()) {
+                        if (vehicleSafetyRelationship.getValue() == SafetyConditions.DIFFERENT_DIRECTIONS) {
+                            Direction thisVehicleDirection = readingsList.getVehicleDataForName(this.data.getName()).getDirection();
+                            Direction thatVehicleDirection = readingsList.getVehicleDataForName((String) vehicleSafetyRelationship.getKey()).getDirection();
+                            
+                            // opposite direction check
+                            if (thisVehicleDirection == Direction.NORTH && thatVehicleDirection == Direction.SOUTH
+                                    || thisVehicleDirection == Direction.SOUTH && thatVehicleDirection == Direction.NORTH
+                                    || thisVehicleDirection == Direction.WEST && thatVehicleDirection == Direction.EAST
+                                    || thisVehicleDirection == Direction.EAST && thatVehicleDirection == Direction.WEST) {
+                                String[] vehicles = {this.data.getName(), (String) vehicleSafetyRelationship.getKey()};
+
+                                Point2D.Double distances[][] = calculateDistanceTraveled(vehicles);
+
+                                if (distances.length == CDReading.NUMBER_CARS) {
+                                    double closestPointSeconds = calculateClosestPoint(distances);
+                                    Point2D.Double[] positions = calculateVehiclesPositionAtPoint(closestPointSeconds, distances);
+
+                                    // assuming only TWO cars in this check
+                                    double closestPoint = calculateClosestPoint(distances);
+                                    double distance = positions[0].distance(positions[1]);
+                                    System.out.println("Distance: " + distance / 20.0 + "\nSpeed: " + data.getSpeed());
+
+                                    if (closestPoint < SAFE_DISTANCE) { // Head-on collision condition
+                                        Direction newDirection = null;
+                                        boolean validDirection = false;
+                                        for (int i = 0; i < 3; i++) {
+                                            if ((newDirection = Direction.randomDirection()) != this.data.getDirection()
+                                                    && !this.data.willHitEdge(newDirection)) {
+                                                validDirection = true;
+                                                break;
+                                            }
+                                        }
+                                        if (validDirection) {
+                                            // change direction to a valid one if no other car has changed direction within the TIME_SPAN
+                                            synchronized (readingsList) {
+                                                if (!readingsList.hasDirectionChanged()) {
+                                                    System.out.println("The vehicles are in risk of collision, changing direction to vehicle " + this.data.getName());
+                                                    this.data.setDirection(newDirection);
+                                                    readingsList.setChangedDirection(true);
+                                                }
+                                            }
+                                        } else {
+                                            System.err.println("Unfortunately no alternate direction is possible...");
+                                        }
+                                        //this.data.setDirection(Direction.SOUTH);
+                                    }
+                                }
+                            }
+                        }
+                    }
 
                     /*Point2D.Double distances[][] = calculateDistanceTraveled();
                      if (distances.length == CDReading.NUMBER_CARS) {

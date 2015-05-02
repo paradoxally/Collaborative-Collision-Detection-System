@@ -39,7 +39,7 @@ public class Vehicle implements Runnable {
         synchronized (collisionDetection) {
             double speed = data.calculateSpeed();
 
-            if (!data.willHitEdge()) {
+            if (!data.willHitEdge(this.data.getDirection())) {
                 if (this.justStartedCar) {
                     // if the car just started, use the coordinates given
                     this.justStartedCar = false;
@@ -89,6 +89,9 @@ public class Vehicle implements Runnable {
             try {
                 updateCoordinates();
                 Thread.sleep(TIME_SPAN);
+                synchronized(this.readingsList) {
+                    this.readingsList.setChangedDirection(false);
+                }
                 //System.out.println("Readings count: " + readingsList.getVehicleReadings().size());
 
             } catch (InterruptedException ex) {
